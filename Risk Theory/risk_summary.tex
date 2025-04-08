@@ -1,0 +1,2135 @@
+\documentclass[13pt,a4paper]{article}
+
+\usepackage[margin=0.4in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{lmodern}
+\usepackage{array}
+\usepackage{lscape}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\begin{document}
+
+\title{Summary of Risk Theory Chapters 1--11}
+\author{Kgosi Ruri Molebatsi}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\section{Chapter 1: Preliminaries \& Background (Exam-Focused)}
+\label{sec:chapter1}
+
+\subsection{Scope and Types of Insurance}
+\begin{itemize}
+  \item \textbf{Short-Term vs. Long-Term Insurance:}
+    \begin{itemize}
+      \item \emph{Short-term:} e.g.\ motor, property, liability; typically analyzed per year (or similar time unit).
+      \item \emph{Long-term:} e.g.\ life insurance, pensions; often requires different modeling approaches.
+    \end{itemize}
+  \item \textbf{Basic Setup:} Focus is on modeling random claims over a fixed period (e.g.\ 1 year).
+\end{itemize}
+
+\subsection{Model Framework for Short-Term Insurance}
+\begin{itemize}
+  \item \textbf{Total Claims Process:} 
+  \[
+    S(t) \;=\; \sum_{i=1}^{N(t)} X_i,
+  \]
+  where
+  \begin{itemize}
+    \item \(N(t)\) is the number of claims in \([0, t]\).
+    \item \(X_i\) are individual claim amounts (i.i.d.\ random variables).
+  \end{itemize}
+  \item \textbf{Discrete vs. Continuous Time:}
+    \begin{itemize}
+      \item Exams may simplify to a \emph{discrete-time} model with a single period or multiple discrete periods.
+      \item Continuous models use Poisson processes or renewal processes.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Key Simplifying Assumptions (Exam-Focused)}
+\begin{enumerate}
+  \item \emph{Immediate settlement:} Claims paid immediately upon occurrence.
+  \item \emph{Ignoring expenses/investment income:} Focus is purely on claim flows.
+  \item \emph{Known claim distribution:} The insurer has enough data or can assume a specific distribution for \(X_i\).
+\end{enumerate}
+\textbf{Tip:} Exam questions often mention these assumptions explicitly or ask how relaxing them would affect the model (e.g.\ delayed claims leads to run-off triangles in later chapters).
+
+\subsection{MGFs and CGFs (Essential Theory)}
+\begin{itemize}
+  \item \textbf{Moment Generating Function (MGF):} 
+  \[
+    M_X(t) \;=\; \mathbb{E}[e^{tX}].
+  \]
+    - Derivatives at \(t=0\) give the moments: \(M_X^{(r)}(0)=\mathbb{E}[X^r]\).
+  \item \textbf{Cumulant Generating Function (CGF):} 
+  \[
+    C_X(t) \;=\; \ln\bigl(M_X(t)\bigr).
+  \]
+    - Particularly useful for deriving cumulants (e.g., variance, skewness).
+  \item \textbf{Uniqueness Property:} If two random variables have the same MGF for all \(t\) in some open interval, they share the same distribution.
+\end{itemize}
+\textbf{Exam Tip:} You may be asked to compute/recognize MGFs for standard distributions (Poisson, Exponential, Gamma, etc.) and use them to find means/variances.
+
+\subsection{Distributions Commonly Cited}
+\begin{itemize}
+  \item \textbf{Poisson (for claim counts):} 
+    \[
+      P(N=n) \;=\; \frac{(\lambda t)^n e^{-\lambda t}}{n!}.
+    \]
+  \item \textbf{Exponential, Gamma, Lognormal, Pareto} (for claim amounts). 
+  \item \textbf{Exam Focus:} Basic properties (mean, variance, mgf) and how they combine in the compound model for total claims.
+\end{itemize}
+
+\subsection{Questions Typically Asked in Exams}
+\begin{enumerate}
+  \item \textbf{Deriving Basic Moments:}  
+    - Example: “Given the mgf for a random variable, find \(\mathbb{E}[X]\) and \(\mathrm{Var}(X)\).”
+  \item \textbf{Compound Sum Setup:}
+    - Show how \(S=\sum_{i=1}^{N} X_i\) leads to \(M_S(t)=M_N(\ln(M_X(t)))\).
+  \item \textbf{Interpretation of Model Assumptions:}
+    - e.g.\ “Why ignore investment income?” or “How does delayed claim settlement change the model?”
+\end{enumerate}
+
+\subsection{Example Exam Calculation}
+\begin{itemize}
+  \item \emph{Example:} \(N\sim\mathrm{Poisson}(\lambda)\), \(X_i\sim\mathrm{Exp}(\mu)\). 
+  \begin{itemize}
+    \item \(\mathbb{E}[S]=\lambda \times \tfrac{1}{\mu}\).
+    \item \(\mathrm{Var}(S)=\lambda \left(\frac{1}{\mu^2} + \left(\frac{1}{\mu}\right)^2\right)=2\lambda/\mu^2.\)
+    \item \(\psi(t)=\exp\bigl[\lambda(M_X(t)-1)\bigr]\), etc.
+  \end{itemize}
+  \item \emph{Exam Tip:} The question may ask for mgf-based derivations or direct moment formulas.
+\end{itemize}
+
+\subsection{Summary}
+\begin{itemize}
+  \item Chapter 1 sets the \emph{foundation}: basic assumptions, mgf/cgf tools, and the idea that total claims = (number of claims) \(\times\) (size of each claim).
+  \item These concepts underlie subsequent chapters (e.g.\ premium calculations, reinsurance, ruin theory).
+  \item \textbf{Master the mgf and compound distribution framework}—they appear repeatedly in exam questions.
+\end{itemize}
+
+\section{Chapter 2: Loss (Claim Size) Distributions (Exam-Focused)}
+\label{sec:chapter2}
+
+\subsection{Introduction}
+\begin{itemize}
+  \item \textbf{Goal:} Model the severity (individual claim sizes) in insurance portfolios.
+  \item \textbf{Exam Importance:} You will often be required to identify appropriate distributions, derive key parameters (mean, variance), and handle tail probabilities or MGFs.
+\end{itemize}
+
+\subsection{Common Distributions}
+Typical distributions used for claim amounts:
+\begin{enumerate}
+  \item \textbf{Exponential}(\(\lambda\))
+  \begin{itemize}
+    \item PDF: \(f(x)=\lambda e^{-\lambda x}, \;x>0.\)
+    \item \(\mathbb{E}[X] = \tfrac{1}{\lambda}, \;\mathrm{Var}(X) = \tfrac{1}{\lambda^2}.\)
+    \item \emph{Memoryless property} often tested in exam questions.  
+  \end{itemize}
+
+  \item \textbf{Gamma}(\(\alpha,\lambda\))
+  \begin{itemize}
+    \item PDF: \(f(x)= \frac{\lambda^\alpha x^{\alpha-1}e^{-\lambda x}}{\Gamma(\alpha)},\; x>0.\)
+    \item \(\mathbb{E}[X] = \frac{\alpha}{\lambda},\quad \mathrm{Var}(X) = \frac{\alpha}{\lambda^2}.\)
+    \item Special case: \(\alpha=n \in \mathbb{N}\) yields Erlang distribution (exam tip).
+  \end{itemize}
+
+  \item \textbf{Lognormal}(\(\mu,\sigma^2\))
+  \begin{itemize}
+    \item \(Y=\ln X \sim \mathcal{N}(\mu,\sigma^2)\).
+    \item \(\mathbb{E}[X]=\exp(\mu + \tfrac12\sigma^2),\quad \mathrm{Var}(X)=\exp(2\mu + \sigma^2)\bigl(\exp(\sigma^2)-1\bigr).\)
+    \item Often used to model moderately heavy-tailed data.
+  \end{itemize}
+
+  \item \textbf{Pareto}(\(\alpha,\lambda\))
+  \begin{itemize}
+    \item Survival: \(P(X > x)= \left(\frac{\lambda}{\lambda + x}\right)^{\alpha}, \; x>0.\)
+    \item \(\mathbb{E}[X]= \frac{\lambda}{\alpha-1}\) (for \(\alpha>1\)), \(\mathrm{Var}(X)=\frac{\alpha \lambda^2}{(\alpha-1)^2(\alpha-2)}\) (for \(\alpha>2\)).
+    \item Heavy-tailed distribution frequently used for large claims.
+  \end{itemize}
+
+  \item \textbf{Weibull}(\(c,\gamma\))
+  \begin{itemize}
+    \item Survival: \(P(X> x)= e^{-c\,x^\gamma},\; x>0.\)
+    \item Flexible tail behavior, bridging exponential (\(\gamma=1\)) and heavier tails.
+  \end{itemize}
+
+\end{enumerate}
+
+\subsection{Heavy Tails and Comparisons}
+\begin{itemize}
+  \item \textbf{Tail Heaviness Ranking:} Pareto and some Weibull forms can exhibit heavier tails than exponential or gamma.
+  \item \textbf{Exam Tip:} Questions may ask which distribution is \emph{most appropriate} if data exhibit a large proportion of very high claims.
+\end{itemize}
+
+\subsection{MGFs and Usage}
+\begin{itemize}
+  \item \emph{Exponential MGF:} \(M_X(t)=\frac{\lambda}{\lambda - t}, \; t<\lambda.\)
+  \item \emph{Gamma MGF:} \(M_X(t)=\left(\frac{\lambda}{\lambda - t}\right)^\alpha, \; t<\lambda.\)
+  \item \emph{Lognormal}: \(M_X(t)\) does not have a closed form in elementary functions, but we can compute \(\mathbb{E}[e^{tX}]\) numerically or refer to expansions.
+  \item \textbf{Application in Aggregate Models}: The mgf of individual losses feeds into the mgf of the \emph{compound} sum \(S\). 
+\end{itemize}
+
+\subsection{Exam-Style Questions}
+\begin{enumerate}
+  \item \textbf{Identify Distribution:} Data or summary stats provided, you must choose an appropriate distribution. 
+  \item \textbf{Derive Mean/Variance/Tail Probability:} e.g.\ “What fraction of claims exceed 2,000 if \(X\sim\text{Pareto}(\alpha,\lambda)\)?”
+  \item \textbf{Compare Tails:} “Which distribution yields heavier tail probabilities for large claims?” 
+  \item \textbf{MGF Calculations:} e.g.\ use mgf to find skewness, etc.
+\end{enumerate}
+
+\subsection{Summary}
+\begin{itemize}
+  \item Chapter 2 provides \emph{individual claim severity models}.
+  \item Master the key formulas for \(\mathbb{E}[X]\), \(\mathrm{Var}(X)\), and mgfs or survival functions for each distribution. 
+  \item Recognize which distribution is best suited for light, moderate, or heavy tails. 
+\end{itemize}
+
+\section{Chapter 3: Aggregate (Collective) Risk Models (Exam-Focused)}
+\label{sec:chapter3}
+
+\subsection{Overview}
+\begin{itemize}
+  \item \textbf{Objective:} Model the \emph{total claims} \(S\) over a fixed period by combining:
+    \begin{enumerate}
+      \item A distribution for the \emph{number of claims} \(N\).
+      \item A distribution for the \emph{amount of each claim} \(X_i\).
+    \end{enumerate}
+  \item \textbf{Compound Sum Model:}
+  \[
+    S \;=\; \sum_{i=1}^{N} X_i, 
+    \quad (S=0 \text{ if } N=0).
+  \]
+\end{itemize}
+
+\subsection{Basic Properties of the Compound Model}
+\begin{itemize}
+  \item \(\mathbb{E}[S] = \mathbb{E}[N]\cdot \mathbb{E}[X]\).
+  \item \(\mathrm{Var}(S) = \mathbb{E}[N] \,\mathrm{Var}(X) + \mathrm{Var}(N)\,(\mathbb{E}[X])^2.\)
+  \item \textbf{MGF of } \(S\):
+  \[
+    M_S(t) = \mathbb{E}[e^{tS}] 
+            = \mathbb{E}\Bigl[\bigl(M_X(t)\bigr)^N\Bigr]
+            = M_N\bigl(\ln(M_X(t))\bigr).
+  \]
+  \item \emph{Exam Tip:} Be comfortable deriving or applying these formulas for different distributions of \(N\) and \(X\).
+\end{itemize}
+
+\subsection{Distributions for Number of Claims, \(N\)}
+Typical choices include:
+\begin{enumerate}
+  \item \textbf{Poisson}(\(\lambda\)):
+    \[
+      P(N=n) = \frac{e^{-\lambda}\,\lambda^n}{n!}.
+    \]
+    - \(\mathbb{E}[N] = \mathrm{Var}(N)=\lambda\).
+  \item \textbf{Binomial}(\(n,p\)):
+    \[
+      P(N=k) = \binom{n}{k}\,p^k(1-p)^{n-k}.
+    \]
+    - \(\mathbb{E}[N]=np, \,\mathrm{Var}(N)=np(1-p)\).
+  \item \textbf{Negative Binomial}(\(r,p\)) (or alternative parameterizations):
+    \[
+      P(N=k) 
+      = \binom{k+r-1}{k}\,(1-p)^r \,p^k, \quad k=0,1,2,\dots
+    \]
+    - \(\mathbb{E}[N]=\frac{pr}{1-p},\, \mathrm{Var}(N)=\frac{pr}{(1-p)^2}.\)
+\end{enumerate}
+
+\subsection{Compound Distributions: Special Cases}
+\begin{itemize}
+  \item \textbf{Compound Poisson:} \(S \sim \mathrm{CP}(\lambda, X)\). 
+    \[
+      M_S(t)=\exp\bigl[\lambda\bigl(M_X(t)-1\bigr)\bigr].
+    \]
+    - \(\mathbb{E}[S]=\lambda\,\mathbb{E}[X]\).
+    - \(\mathrm{Var}(S)=\lambda\,(\mathrm{Var}(X)+(\mathbb{E}[X])^2)\).
+  \item \textbf{Compound Binomial:} \(S \sim \mathrm{CB}(n,p,X)\). 
+    \[
+      M_S(t)=\bigl(p\,M_X(t) + (1-p)\bigr)^n.
+    \]
+  \item \textbf{Compound Negative Binomial:} \(S \sim \mathrm{CNB}(r,p,X)\).
+    \[
+      M_S(t)=\left(\frac{1-p}{1-p\,M_X(t)}\right)^r, \quad \text{(common form)}.
+    \]
+\end{itemize}
+
+\subsection{Interpretations and Exam-Style Examples}
+\begin{itemize}
+  \item \textbf{Interpretation:} 
+    \begin{itemize}
+      \item Poisson-based model suits scenarios with “rare but possible” events, matching data with variance \(\approx\) mean.
+      \item Negative binomial can capture \emph{overdispersion} (variance $>$ mean).
+      \item Binomial approach if the number of potential claims is “capped” or limited (e.g., a finite number of insured objects).
+    \end{itemize}
+  \item \textbf{Exam Question Examples}:
+    \begin{enumerate}
+      \item “Given \(\lambda\) and an exponential claim size with parameter \(\mu\), find \(\mathbb{E}[S]\) and \(\mathrm{Var}(S)\).”
+      \item “If \(N\sim\text{NegBinomial}(r,p)\) and \(X_i\sim \text{Lognormal}\), derive the mgf of \(S\). Identify parameters if asked.”
+      \item “Compare the effect of using Poisson vs. negative binomial for the claim count distribution on the variance of \(S\).”
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Exam Tips and Common Pitfalls}
+\begin{enumerate}
+  \item \textbf{Use of MGFs}: Always check the domain of \(t\) for mgf definitions. If a question says “prove these are the same distribution,” show identical mgfs for all \(t\) in an interval.
+  \item \textbf{Moment Calculations}: Many exam problems revolve around 
+    \(\mathbb{E}[S]\) and \(\mathrm{Var}(S)\). Keep the formula 
+    \(\mathrm{Var}(S)=\mathbb{E}[N]\mathrm{Var}(X)+\mathrm{Var}(N)(\mathbb{E}[X])^2\) 
+    in mind.
+  \item \textbf{Parameterizing Negative Binomial}: Different texts use different parameters (e.g., number of successes vs. failures). Read the exam question carefully.
+\end{enumerate}
+
+\subsection{Summary}
+\begin{itemize}
+  \item \textbf{Aggregate risk models} unify frequency and severity distributions.
+  \item \textbf{Compound distribution formula} for mgf:
+    \[
+      M_S(t)=M_N\bigl(\ln(M_X(t))\bigr)
+    \]
+    is central.  
+  \item \textbf{Know special cases}: Compound Poisson, Binomial, Negative Binomial.  
+\end{itemize}
+
+
+\begin{table}[ht]
+    \centering
+    \renewcommand{\arraystretch}{4.0}
+    \begin{tabular}{l p{3.0cm} p{3.4cm} p{3.6cm} p{3.9cm}}
+    \hline
+    & \textbf{Description}
+    & \textbf{Exact Distribution}
+    & \textbf{Mean, Variance}
+    & \textbf{Large-$n$ / Large-$\alpha$ Approx.}\\
+    \hline
+    \textbf{Scenario 1} 
+    & \parbox{3.0cm}{\centering Sum of $n$ i.i.d.\ Exp($\lambda$) \\(fixed $n$)}
+    & \parbox{3.4cm}{Erlang($n,\lambda$) (a special case of Gamma)}
+    & \parbox{3.6cm}{ \centering
+      \[\displaystyle \mathbb{E}[S] = \frac{n}{\lambda}, \]
+       \[\mathrm{Var}(S) = \frac{n}{\lambda^2}\]}
+    & \parbox{3.9cm}{ \centering
+      If $n$ is large, 
+      \[\,S \approx \mathrm{Normal}\Bigl(\tfrac{n}{\lambda}, \tfrac{n}{\lambda^2}\Bigr)\]}
+    \\[1em]
+    
+    \textbf{Scenario 2} 
+    & \parbox{3.0cm}{\centering Sum of $n$ i.i.d.\ Exp($\lambda$) \\ (large $n$ via CLT)}
+    & \parbox{3.4cm}{\centering Same as Scenario 1 (Erlang)}
+    & \parbox{3.6cm}{\centering Same as Scenario 1: 
+      \[\mathbb{E}[S]=\tfrac{n}{\lambda}, \]
+       \[\mathrm{Var}(S)=\tfrac{n}{\lambda^2}\]}
+    & \parbox{3.9cm}{
+      By CLT, 
+      \[\,S \approx \mathrm{Normal}\Bigl(\tfrac{n}{\lambda}, \tfrac{n}{\lambda^2}\Bigr)\]}
+    \\[1em]
+    
+    \textbf{Scenario 3} 
+    & \parbox{3.0cm}{\centering Compound Poisson: \\ $N\!\sim \mathrm{Pois}(\alpha)$, \\ $X_i\!\sim \mathrm{Exp}(\beta)$}
+    & \parbox{3.4cm}{\centering No simple named distribution}
+    & \parbox{3.6cm}{\centering
+      \[\displaystyle \mathbb{E}[S] = \alpha\,\frac{1}{\beta}, \]
+       \[\mathrm{Var}(S) = \alpha\,\frac{2}{\beta^2}\]}
+    & \parbox{3.9cm}{ \centering
+      No direct name.  
+      For moderate $\alpha$, we just use exact (compound Poisson) formulas.}
+    \\[1em]
+    
+    \textbf{Scenario 4} 
+    & \parbox{3.0cm}{\centering Compound Poisson \\ with large $\alpha$ \\ (a “big” Poisson rate)}
+    & \parbox{3.4cm}{\centering Same compound Poisson form, but $N$ is large}
+    & \parbox{3.6cm}{\centering
+      \[\displaystyle \mathbb{E}[S] = \frac{\alpha}{\beta},\]
+       \[\mathrm{Var}(S) = \frac{2\alpha}{\beta^2}\]}
+    & \parbox{3.9cm}{ \centering
+      \textbf{Tip}: If $\alpha$ is large, 
+      \[\,S \approx \mathrm{Normal}\!\Bigl(\tfrac{\alpha}{\beta},\tfrac{2\alpha}{\beta^2}\Bigr).\]\\
+      (CLT: many exponentials in total)
+    }
+    \\
+    \hline
+    \end{tabular}
+    \caption{\textbf{Summary of four scenarios for sums of Exponential random variables.} 
+Each row corresponds to one scenario: 
+(1) a fixed number \(n\) of i.i.d.\ exponentials (yielding an Erlang distribution),
+(2) the same sum but with large \(n\), 
+(3) a compound Poisson model with a moderate Poisson rate \(\alpha\), 
+and (4) a compound Poisson model with large \(\alpha\). 
+Columns detail (i)~the overall \emph{Setting / Description} of the summation, 
+(ii)~the \emph{Exact Distribution} where applicable, 
+(iii)~the \emph{Mean and Variance} formulas, 
+and (iv)~any \emph{Large-\(n\) / Large-\(\alpha\) Approximation} (typically Normal by the Central Limit Theorem). }
+\end{table}
+=
+
+\section{Chapter 4: Premium Calculation Principles (Exam-Focused)}
+\label{sec:chapter4}
+
+\subsection{Purpose and Key Ideas}
+\begin{itemize}
+  \item \textbf{Objective:} Determine a fair and justifiable premium that covers expected future claims, expenses, and provides a safety loading.
+  \item \textbf{Relevance:} Candidates are often tested on recognizing or applying different premium principles in standard actuarial contexts.
+\end{itemize}
+
+\subsection{Standard Premium Principles}
+Let \(X\) be a random variable representing the loss (or total claim) distribution over a period. A \emph{premium principle} is a function \(\pi(X)\) mapping the distribution of \(X\) to a single premium value.
+
+\begin{description}
+  \item[Expected Value Principle (EVP)] 
+  \[
+    \pi(X) \;=\; (1 + \theta)\,\mathbb{E}[X], \quad \theta > 0.
+  \]
+  \emph{Key points:}
+  \begin{itemize}
+    \item Simple and widely used.
+    \item Premium depends only on the mean of \(X\).
+    \item Does \emph{not} reflect variance or higher moments.
+  \end{itemize}
+
+  \item[Variance Principle]
+  \[
+    \pi(X) \;=\; \mathbb{E}[X] \;+\; \alpha\,\mathrm{Var}(X),
+  \]
+  \emph{Key points:}
+  \begin{itemize}
+    \item Incorporates a \emph{risk loading} proportional to variance.
+    \item More sensitive to changes in the spread of the distribution than EVP.
+  \end{itemize}
+
+  \item[Standard Deviation Principle]
+  \[
+    \pi(X) \;=\; \mathbb{E}[X] \;+\; \beta\,\sqrt{\mathrm{Var}(X)},
+  \]
+  \emph{Key points:}
+  \begin{itemize}
+    \item Charges based on the standard deviation (square root of variance).
+    \item Commonly used as a simpler alternative to variance-based methods; more intuitive measure of uncertainty.
+  \end{itemize}
+
+  \item[Exponential (Esscher) Principle]
+  \[
+    \pi(X) \;=\; \frac{1}{\delta} \,\ln \Bigl(\mathbb{E}\bigl[e^{\delta\,X}\bigr]\Bigr), \quad \delta > 0.
+  \]
+  \emph{Key points:}
+  \begin{itemize}
+    \item Derives from exponential utility functions (i.e.\ risk-averse framework).
+    \item Especially emphasizes tail outcomes if \(\delta\) is large.
+  \end{itemize}
+
+  \item[Distortion / Wang's Transform Principles]
+  \[
+    \pi(X) \;=\; \int_{0}^{\infty} \bigl(1 - g(S_X(x))\bigr) \,dx, s
+  \]
+  where \(S_X(x)\) is the survival function and \(g\) is a distortion function.
+  \emph{Key points:}
+  \begin{itemize}
+    \item Allows flexible “distorting” of probabilities to overweight or underweight certain parts of the distribution (often the tail).
+    \item Used to reflect \emph{tail risk} or \emph{risk aversion}.
+  \end{itemize}
+\end{description}
+
+\subsection{Exam Tips \& Common Pitfalls}
+\begin{itemize}
+  \item \textbf{Formulas and usage:} Be sure to remember the exact functional forms (especially for variance vs.\ standard deviation vs.\ exponential principles).
+  \item \textbf{Interpretation questions:} Exams often ask how each principle captures risk. Remember:
+    \begin{itemize}
+      \item EVP ignores variance.
+      \item Variance/SD principles factor in variability.
+      \item Exponential principle heavily penalizes tail events.
+      \item Distortion principles can be shaped to reflect specific risk attitudes.
+    \end{itemize}
+  \item \textbf{Parameter roles:} 
+    \begin{itemize}
+      \item \(\theta\) in EVP is a simple percentage loading.
+      \item \(\alpha\) and \(\beta\) scale the effect of variance or standard deviation.
+      \item \(\delta\) in the exponential principle controls the degree of risk aversion.
+    \end{itemize}
+  \item \textbf{Link to reinsurance \& solvency:} Premium loadings help cover extreme claims and ensure solvency. Knowing how each principle addresses risk can be tested in questions on overall capital requirements.
+\end{itemize}
+
+\subsection{Sample Calculation}
+\textbf{Illustrative setup}: Suppose \(\mathbb{E}[X] = 200\) and \(\mathrm{Var}(X)=2{,}500\). Then
+\begin{itemize}
+  \item \emph{EVP}: \(\pi(X) = (1 + \theta)\times 200\).
+  \item \emph{Variance Principle}: \(\pi(X) = 200 + \alpha\times 2{,}500.\)
+  \item \emph{Standard Deviation Principle}: \(\pi(X) = 200 + \beta\times 50\), since \(\sqrt{2{,}500} = 50\).
+\end{itemize}
+Exams often present a scenario like this and ask you to compare premiums for different loadings or interpret their differences.
+
+\subsection{Conclusion and Reading Check}
+\begin{itemize}
+  \item Make sure you can \emph{recognize} each formula and \emph{discuss} its pros/cons.
+  \item Understand which principle is most appropriate in scenarios emphasizing tail risk (e.g., exponential, distortion methods) vs.\ simpler mass-market pricing (e.g., EVP).
+  \item Reviewing past exam questions on premium principles is highly recommended. Often, these appear as short-answer or numerical comparison problems.
+\end{itemize}
+
+\section{Chapter 5: No-Claims Discount (NCD) Systems}
+\label{sec:chapter5}
+
+\subsection{Introduction and Motivation}
+\begin{itemize}
+  \item \textbf{Main Goal:} Reward policyholders with lower premiums if they have a claim-free (or low-claim) history, and penalize those with frequent claims.
+  \item \textbf{Exam Relevance:} Understand the mechanics (transition rules, discount levels) and be able to explain how these systems reflect the policyholder's \emph{risk level} based on past claims experience.
+\end{itemize}
+
+\subsection{Basic Structure of NCD Systems}
+\begin{itemize}
+  \item \textbf{Classes and Discounts:} Typically a finite set of classes (e.g., Class 0, Class 1, \dots) each associated with a discount on the basic premium.
+  \begin{itemize}
+    \item \emph{Example:} Class 0 = no discount, Class 1 = 20\% discount, Class 2 = 30\% discount, etc.
+  \end{itemize}
+  \item \textbf{Transition Rules:}
+  \begin{itemize}
+    \item \emph{If no claim} in the current year: move one class \emph{up} (i.e., get a higher discount) unless already at the highest class.
+    \item \emph{If a claim occurs}: move down a specified number of classes or reset to a lower discount class.
+  \end{itemize}
+  \item \textbf{Premium}: If the base premium is \(\pi_0\) (for Class 0), then a driver in Class \(k\) pays \(\pi_k = (1 - d_k)\,\pi_0\), where \(d_k\) is the discount rate for Class \(k\).
+\end{itemize}
+
+\subsection{Markov Chain Modeling}
+\begin{itemize}
+  \item \textbf{Why a Markov Chain?} Policyholder’s next class depends only on their current class and whether or not they make a claim.
+  \item \textbf{Transition Probability Matrix (TPM):}
+  \[
+    P = \begin{pmatrix}
+      p_{00} & p_{01} & \cdots \\
+      p_{10} & p_{11} & \cdots \\
+      \vdots & \vdots & \ddots
+    \end{pmatrix},
+  \]
+  where \(p_{ij}\) = Probability of moving from Class \(i\) to Class \(j\) in one period.
+  \item \textbf{Link to Claim Distribution}: 
+    \begin{itemize}
+      \item If claim frequency is Poisson(\(\lambda\)), then the probability of zero claims is \(e^{-\lambda}\), which might drive an “upward” move, while at least one claim drives a “downward” move.
+      \item More advanced systems may differentiate between 1 claim vs.\ 2 or more claims.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Stationary Distribution and Long-Term Behavior}
+\begin{itemize}
+  \item \textbf{Stationary / Steady-State Distribution} \(\boldsymbol{\pi}\):
+  \[
+    \boldsymbol{\pi}\,P \;=\; \boldsymbol{\pi}, 
+    \quad
+    \sum_{i} \pi_i \;=\; 1.
+  \]
+  \item \textbf{Interpretation:} \(\pi_i\) is the proportion of policyholders expected to occupy Class \(i\) in the long run.
+  \item \textbf{Premium Implication:} 
+  \begin{itemize}
+    \item Average premium collected = \(\sum_i \pi_i \, \pi_k\) (where \(\pi_k\) is the class-specific premium).
+    \item Important to check if the system is “profitable” overall given the claim frequency assumptions.
+  \end{itemize}
+\end{itemize}
+
+\subsection{Equilibrium Premium Calculation (Key Exam Topic)}
+\begin{itemize}
+  \item Often tested: \emph{Does this NCD structure, with a given transition rule and discount rates, result in an expected premium that covers claims?}
+  \item \textbf{Steps to solve exam questions}:
+    \begin{enumerate}
+      \item Construct or identify the transition probability matrix \(P\).
+      \item Solve for the stationary distribution \(\boldsymbol{\pi}\).
+      \item Calculate the expected premium received per policy: \(\sum_i \pi_i \, \pi_k\).
+      \item Compare it to \(\mathbb{E}[\text{claims per policy}]\) to see if there's an overall profit/loading margin.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Common Pitfalls in Exam Context}
+\begin{itemize}
+  \item \textbf{Forgetting boundary conditions}: e.g., top class can’t go higher.
+  \item \textbf{Mixing up} the discount factor with the final premium.
+  \item \textbf{Inaccurate Markov chain assumptions}: exam questions may trick you with multiple-claim transitions or partial credits for claims frequency.
+  \item \textbf{Ignoring re-entry or surcharges}: some systems introduce surcharges if multiple claims occur in a short span.
+\end{itemize}
+
+\subsection{Further Variations}
+\begin{itemize}
+  \item \textbf{Malus systems}: Extended penalty classes for repeated claims.
+  \item \textbf{Credibility-based NCD}: More sophisticated (Bayesian) approach, combining prior risk classification with NCD transitions.
+  \item \textbf{Real-world constraints}: Regulation may cap premium increases or limit number of classes.
+\end{itemize}
+
+\subsection{Summary and Key Exam Points}
+\begin{itemize}
+  \item Know how to \emph{set up} and \emph{solve} the transition matrix problem.
+  \item Be able to \emph{interpret} the stationary distribution and average premium in equilibrium.
+  \item Understand how the choice of discount rates and transition rules affects long-term profitability and policyholder incentives.
+\end{itemize}
+
+\section{Chapter 6: Run-Off Triangles \& Claims Reserving (Exam-Focused)}
+\label{sec:chapter6}
+
+\subsection{Motivation and Setup}
+\begin{itemize}
+  \item \textbf{Goal:} Estimate the ultimate cost of incurred claims that have not yet been fully settled (the \emph{reserve}).
+  \item \textbf{Run-Off (Development) Triangles:} Common format for representing how claims develop over time (delay in reporting, partial settlements, reopened claims, etc.).
+  \item \textbf{Exam Relevance:} Familiarity with chain-ladder (CL) and related methods is frequently tested, including numerical examples where you project outstanding liabilities.
+\end{itemize}
+
+\subsection{Run-Off Triangles: Basic Structure}
+\begin{itemize}
+  \item Organize claims data by \emph{accident (or underwriting) year} vs.\ \emph{development year}.
+  \item Typical triangle layout:
+  \[
+    \begin{array}{c|cccccc}
+      \text{Accident/AY} & \text{Dev.\ Yr 1} & \text{Dev.\ Yr 2} & \dots & \text{Dev.\ Yr k}\\
+      \hline
+      1 & C_{1,1} & C_{1,2} & \dots & C_{1,k} \\
+      2 & C_{2,1} & C_{2,2} & \dots & \\
+      \vdots & \vdots &  & \ddots & \\
+      n & C_{n,1} &  &  & 
+    \end{array}
+  \]
+  where \(C_{i,j}\) is the cumulative claims (or paid/incurred claims) for accident year \(i\) at development stage \(j\).
+\end{itemize}
+
+\subsection{Chain-Ladder (CL) Method}
+\begin{itemize}
+  \item \textbf{Key Assumption:} Future claims development follows historical patterns; each development year \(j\) has a consistent \emph{development factor} that scales from one stage to the next.
+  \item \textbf{Steps in CL} (for cumulative data):
+    \begin{enumerate}
+      \item Compute \emph{age-to-age factors}:
+      \[
+        f_j \;=\; \frac{\sum_{i=1}^{n-j} C_{i,\,j+1}}{\sum_{i=1}^{n-j} C_{i,\,j}}, 
+        \quad j=1,\dots,k-1.
+      \]
+      \item Project the most recent diagonal forward using these factors to get the full triangle.
+      \item Ultimate claims for AY \(i\): \(C_{i,k}\) (once the triangle is completed).
+      \item The \emph{reserve} is \(\sum_i \bigl[C_{i,k} - C_{i,\text{latest observed}}\bigr]\).
+    \end{enumerate}
+  \item \textbf{Exam Tips}:
+    \begin{itemize}
+      \item Always check if the question uses \emph{incremental} or \emph{cumulative} data.
+      \item Provide a clear table and show each step of factor calculation.
+      \item Some variants weight the factors (volume-weighted average vs.\ simple average).
+    \end{itemize}
+\end{itemize}
+
+\subsection{Bornhuetter-Ferguson (BF) Method}
+\begin{itemize}
+  \item \textbf{Key Idea:} Combine a priori expected ultimate loss with the observed development to date.
+  \item \textbf{Formula Sketch:}
+    \[
+      \text{Ultimate Loss for AY }i
+      \;=\; \bigl[\text{Current Cumulative}\bigr] \] \newline
+      \[ 
+      \;+\; \bigl[\text{(A Priori Ultimate)}\bigr]\times \bigl[1 - \text{Completion Ratio}\bigr].
+    \]
+  \item \textbf{Completion Ratio} often derived from chain-ladder development factors but is applied in a more “credibility-like” manner.
+  \item \textbf{Exam Points}:
+    \begin{itemize}
+      \item Recognize BF does not overreact to fluctuations in early development data if the a priori expectation is robust.
+      \item Show how to calculate the “expected percentage reported” vs.\ the portion “still to be reported.”
+    \end{itemize}
+\end{itemize}
+
+\subsection{Other Methods Mentioned}
+\begin{itemize}
+  \item \textbf{Cape Cod Method}: A blend of CL and BF, using exposures and overall claim experience to estimate a priori loss ratios.
+  \item \textbf{Regression-based approaches}: In some syllabi, the chain-ladder factors can be derived via regression.
+  \item \textbf{Stochastic models} (e.g.\ Mack’s Model) for interval estimates and variability in reserves.
+\end{itemize}
+
+\subsection{Common Pitfalls \& Exam-Focused Reminders}
+\begin{itemize}
+  \item \textbf{Incomplete or mislabeled triangles}: Always carefully interpret how the data is structured (accident vs.\ underwriting vs.\ report year).
+  \item \textbf{Mixing incremental vs.\ cumulative amounts}: The chain-ladder approach is most direct with cumulative data; for incremental data, extra steps are needed to convert or to apply an incremental chain-ladder method.
+  \item \textbf{Underestimating tail development}: Some triangles stop too early; a \emph{tail factor} might be required.
+  \item \textbf{Numerical accuracy}: Exams commonly provide partial triangles; be precise in factor calculations to avoid rounding errors.
+\end{itemize}
+
+\subsection{Typical Exam Question Styles}
+\begin{enumerate}
+  \item \textbf{Complete the run-off triangle} using chain-ladder factors and estimate the total reserve.
+  \item \textbf{Compare chain-ladder vs.\ BF estimates}: Show how each method computes the reserve for a specific accident year.
+  \item \textbf{Comment on assumptions}: The exam may ask how realistic the chain-ladder assumptions are and what alternative methods can be used if assumptions are violated.
+\end{enumerate}
+
+\subsection{Summary}
+\begin{itemize}
+  \item Claims reserving is a fundamental actuarial task with multiple methods.
+  \item Chain-ladder is the \emph{most common} approach tested, but be ready to discuss BF or Cape Cod if required.
+  \item Carefully handle the data (especially incremental vs.\ cumulative) and master the steps to fill in or extrapolate the triangle.
+\end{itemize}
+\section{Chapter 7: Ruin Theory (Exam-Focused)}
+\label{sec:chapter7}
+
+\subsection{Classical Risk Model Setup}
+\begin{itemize}
+  \item \textbf{Surplus Process:} Define
+  \[
+    U(t) \;=\; u + ct - S(t),
+  \]
+  where
+  \begin{itemize}
+    \item \(u\) is the initial surplus (capital),
+    \item \(c\) is the premium rate (assumed constant),
+    \item \(S(t)\) is the aggregate claims up to time \(t\).
+  \end{itemize}
+  \item \textbf{Claim Process:} Often \(S(t)\) is modeled by a \emph{compound Poisson process}: 
+  \[
+    S(t) \;=\; \sum_{i=1}^{N(t)} X_i,
+  \]
+  where \(N(t)\sim \mathrm{Poisson}(\lambda t)\) and the \(X_i\)'s are i.i.d.\ claim sizes, independent of \(N(t)\).
+  \item \textbf{Ruin Time:} \(\tau = \inf \{ t \ge 0 \mid U(t) < 0 \}\). If no such time exists, \(\tau = \infty\).
+\end{itemize}
+
+\subsection{Probability of Ultimate Ruin}
+\begin{itemize}
+  \item \(\psi(u) = \Pr(\tau < \infty \,\mid U(0)=u)\), the probability that the surplus eventually falls below zero starting from \(u\).
+  \item \textbf{Key Inequality (Cram\'er--Lundberg Bound):} 
+    \[
+      \psi(u) \;\le\; \exp(-R\,u),
+    \]
+    where \(R\) is the \emph{adjustment coefficient}, the positive root of 
+    \[
+      c\, M_X(-R) \;=\; \lambda,
+    \]
+    and \(M_X\) is the mgf of the claim size \(X\). 
+    \item \emph{Interpretation}: If \(c > \lambda \,\mathbb{E}[X]\) (i.e.\ the premium loading is positive), ruin probability can be bounded by an exponentially decaying function in \(u\).
+\end{itemize}
+
+\subsection{Premium Loading and Ruin Probability}
+\begin{itemize}
+  \item Define the \emph{relative safety loading} \(\theta\) via \(c = (1+\theta)\,\lambda\,\mathbb{E}[X]\).
+  \item Higher \(\theta\) typically \emph{decreases} ruin probability.
+  \item \(\psi(u)\) is typically \emph{decreasing} in both \(u\) and \(\theta\).
+\end{itemize}
+
+\subsection{Discrete-Time Approximation or More General Models}
+\begin{itemize}
+  \item In some exam syllabi, ruin theory is introduced in a discrete-time setting: 
+  \[
+    U_{n+1} = U_n + c - X_{n+1}, \quad n=0,1,2,\dots,
+  \]
+  with ruin probability analysis done similarly, but typically with Markov chain methods.
+  \item Some courses cover the \emph{Gerber--Shiu function} approach, which captures not only the probability of ruin but also the severity and timing of ruin.
+\end{itemize}
+
+\subsection{Exam Tips and Common Pitfalls}
+\begin{enumerate}
+  \item \textbf{Identify the Model Quickly:} 
+    \begin{itemize}
+      \item Classical (continuous-time) model vs.\ discrete-time model.
+      \item Compound Poisson claims vs.\ other processes.
+    \end{itemize}
+  \item \textbf{Adjustment Coefficient Calculations:} Many exam problems require solving 
+    \(\lambda\, \mathbb{E}[e^{-R\,X}] = c\). 
+    \begin{itemize}
+      \item You may have to guess the form of \(R\) for simple claim size distributions (e.g.\ exponential).
+      \item Show each algebraic step carefully.
+    \end{itemize}
+  \item \textbf{Using Bounds (Inequalities):} 
+    \begin{itemize}
+      \item Provide the \emph{exponential bound} (Cram\'er--Lundberg).
+      \item Sometimes the exam only wants a \emph{numerical upper bound} for \(\psi(u)\).
+    \end{itemize}
+  \item \textbf{Mixing up Notations/Parameters:} Pay attention to whether the question states \(\lambda\) as frequency \emph{per unit time} or otherwise. Also track if premium rate \(c\) is \emph{annual} or \emph{per unit time}.
+\end{enumerate}
+
+\subsection{Typical Exam-Style Questions}
+\begin{itemize}
+  \item \textbf{Calculating or bounding ruin probability} for given \((u, c, \lambda, X_i)\) data. 
+  \item \textbf{Showing that ruin is certain} if \(c \le \lambda\,\mathbb{E}[X]\) (i.e.\ no safety loading).
+  \item \textbf{Finding the adjustment coefficient} for a known claim size distribution (e.g.\ exponential) and using it to give a numerical bound on \(\psi(u)\).
+  \item \textbf{Interpreting risk loading}: explaining how increasing \(\theta\) changes the ruin probability or how large \(u\) must be for ruin to be “sufficiently small.”
+\end{itemize}
+
+\subsection{Conclusion}
+\begin{itemize}
+  \item Ruin theory provides an analytical framework for the insurer’s solvency over time.
+  \item The classical compound Poisson model and the corresponding ruin probability \(\psi(u)\) (or bounds on it) are staples of exam questions.
+  \item Be ready to apply formula manipulations and short proofs of results like the Cram\'er--Lundberg inequality.
+\end{itemize}
+
+\section{Chapter 8: Reinsurance (Exam-Focused)}
+\label{sec:chapter8}
+
+\subsection{Motivation and Definitions}
+\begin{itemize}
+  \item \textbf{Why Reinsurance?} Transfer part of the insurer’s risk to another risk carrier (the reinsurer) to reduce volatility of losses, protect solvency, and stabilize results.
+  \item \textbf{Key Idea:} Insurer retains some portion of claims; reinsurer covers the rest. Various structures define how these shares are determined.
+\end{itemize}
+
+\subsection{Types of Reinsurance}
+\begin{enumerate}
+  \item \textbf{Proportional (or Pro Rata) Reinsurance}
+  \begin{itemize}
+    \item \emph{Quota Share (QS)}: A fixed fraction \(\alpha\) of each claim is ceded.  
+      - If the insurer’s share is \(\alpha\), then for a claim \(X\), the insurer pays \(\alpha X\) and the reinsurer pays \((1-\alpha)X\).
+    \item \emph{Surplus Reinsurance}: Cede only amounts above a certain line (retention). Similar fraction but only above a specified “surplus line” of coverage. 
+  \end{itemize}
+
+  \item \textbf{Non-Proportional Reinsurance}
+  \begin{itemize}
+    \item \emph{Excess of Loss (XoL)}: Reinsurer covers claims above a \emph{retention} \(M\) up to a limit \(L\). 
+      \[
+        \text{Reinsurer covers } \max\bigl(0,\, \min(X - M,\, L)\bigr).
+      \]
+      The insurer covers the first \(M\) and any claim amount above \(M+L\) (if no further layer).
+    \item \emph{Stop-Loss}: Reinsurer covers aggregate losses over a period if they exceed a certain threshold \(R\). 
+      \[
+        \text{Reinsurer pays } \max\{0, S - R\},
+      \]
+      where \(S\) is total claims in a given period.
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Effect on Risk Measures}
+\begin{itemize}
+  \item \textbf{Expected cost} to insurer with reinsurance:
+    \[
+      \mathbb{E}[\text{Insurer’s claim}]\quad \text{vs.}\quad \mathbb{E}[\text{Claim with no reinsurance}].
+    \]
+  \item \textbf{Variance Reduction:} Reinsurance typically reduces variance (volatility) of claims retained by the insurer.
+  \item \textbf{Ruin Theory Implication:} Lower retained claims \(\implies\) lower ruin probability. Exam questions may combine reinsurance with surplus processes.
+\end{itemize}
+
+\subsection{Reinsurance Premiums}
+\begin{itemize}
+  \item \textbf{Proportional premiums}: Often \(\alpha\) fraction of the original premium, plus reinsurer’s loading.
+  \item \textbf{Non-proportional premiums}: Typically risk-based, e.g.\ \(\mathbb{E}[\text{reinsurer’s layer of claims}] + \text{loading}\). 
+  \item \textbf{Exam Focus}: Identify or derive the reinsurance premium given the distribution of \(X\) (or \(S\)) and the reinsurance arrangement details. 
+\end{itemize}
+
+\subsection{Mathematical Formulation (Key Exam Equations)}
+\begin{itemize}
+  \item \emph{Quota Share}: 
+    \[
+      \text{Insurer claim} \;=\; \alpha\,X, 
+      \quad \text{Reinsurer claim} \;=\;(1-\alpha)\,X.
+    \]
+  \item \emph{Excess of Loss} (per claim):
+    \[
+      \text{Insurer claim} \;=\; \min(X, M) \;+\; \max\bigl(0,\,X - (M+L)\bigr) \;\; \text{(if limited layer }L\text{)},
+    \]
+    \[
+      \text{Reinsurer claim} \;=\; \max\bigl(0,\,X - M\bigr) - \max\bigl(0,\,X - (M+L)\bigr).
+    \]
+  \item \emph{Stop-Loss} (aggregate basis):
+    \[
+      \text{Reinsurer pays} \;=\;\max\{0,\, S - R\}.
+    \]
+\end{itemize}
+
+\subsection{Exam Tips and Pitfalls}
+\begin{enumerate}
+  \item \textbf{Identifying the Reinsurance Type}: Watch out for whether the question references “each claim separately” (XoL) vs.\ “aggregate for the year” (Stop-Loss).
+  \item \textbf{Retention vs.\ Ceding Sums}: Carefully separate how much the insurer retains vs.\ how much is ceded. 
+  \item \textbf{Premium Calculation}: 
+    \begin{itemize}
+      \item Proportional: straightforward share of the original premium (plus loadings).
+      \item XoL / Stop-Loss: might require computing expected payment in the “layer” or “above threshold” region.
+    \end{itemize}
+  \item \textbf{Variance and Ruin Probability}: 
+    \begin{itemize}
+      \item Typical question: “Show how reinsurance modifies the second moment of claims or the ruin probability at initial surplus \(u\).”
+      \item Be prepared for short derivations: e.g., \(\mathrm{Var}(\min(X,M))\).
+    \end{itemize}
+  \item \textbf{Layered Reinsurance}: Sometimes there are multiple layers (e.g., first layer \$M–\$N, second layer \$N–\$K, etc.). Summation of partial covers can complicate claims split.
+\end{enumerate}
+
+\subsection{Summary}
+\begin{itemize}
+  \item \textbf{Reinsurance is a vital tool} for risk management, reducing the insurer’s retained volatility.
+  \item \textbf{Key exam items}: 
+    \begin{itemize}
+      \item Distinguish Quota Share vs.\ Surplus vs.\ XoL vs.\ Stop-Loss.
+      \item Calculate net retained claims and reinsurance cost for given distributions.
+      \item Evaluate how reinsurance influences profitability and solvency (ruin probabilities).
+    \end{itemize}
+\end{itemize}
+
+\section{Chapter 9: Credibility Theory (Exam-Focused)}
+\label{sec:chapter9}
+
+\subsection{Introduction to Credibility}
+\begin{itemize}
+  \item \textbf{Motivation:} Combine \emph{individual} (policy-level) experience with \emph{collective} (portfolio-level) information to produce refined premium rates or predictions of future claims.
+  \item \textbf{Exam Relevance:} Understand the derivation of credibility premiums and the differences between \emph{classical}, \emph{B\"{u}hlmann}, and \emph{B\"{u}hlmann-Straub} approaches.
+\end{itemize}
+
+\subsection{B\"{u}hlmann (Basic) Model}
+\begin{itemize}
+  \item \textbf{Setup:} Let \(X_{ij}\) be the claim for the \(j\)-th period of risk \(i\). The random variable \(\Theta_i\) represents the “risk parameter” of policy \(i\).
+  \item \textbf{Assumptions:}
+    \begin{enumerate}
+      \item \(X_{ij}\mid \Theta_i\) are i.i.d.\ with mean \(\mathbb{E}[X\mid\Theta_i]=m(\Theta_i)\) and variance \(\mathrm{Var}(X \mid \Theta_i)=\sigma^2(\Theta_i)\).
+      \item \(\Theta_i\) have a common prior distribution \(p(\theta)\).
+      \item Different risks \(i\) are independent given their parameters.
+    \end{enumerate}
+  \item \textbf{Credibility Premium:} For risk \(i\), with \(n\) observations \(\overline{X}_i = \frac{1}{n}\sum_{j=1}^n X_{ij}\),
+  \[
+    Z = \frac{n}{n + \frac{\alpha}{\beta}}, 
+    \quad \text{and}\quad 
+    \hat{m}_i \;=\; Z\,\overline{X}_i \;+\; (1-Z)\,\mu,
+  \]
+  where
+  \[
+    \mu = \mathbb{E}[m(\Theta)], 
+    \quad
+    \alpha = \mathbb{E}\bigl[\sigma^2(\Theta)\bigr], 
+    \quad
+    \beta = \mathrm{Var}\bigl(m(\Theta)\bigr).
+  \]
+  \item \emph{Interpretation}: \(\hat{m}_i\) is a weighted average of the \emph{individual mean} \(\overline{X}_i\) and the \emph{overall (collective) mean} \(\mu\). 
+    \(\,Z\) (the \emph{credibility factor}) determines how much weight is placed on individual vs.\ collective data.
+\end{itemize}
+
+\subsection{B\"{u}hlmann-Straub Extension}
+\begin{itemize}
+  \item \textbf{Heterogeneous Exposure}: Allows each risk \(i\) to have \(n_i\) observations, or different volumes of data (e.g.\ sum of exposures).
+  \item Credibility factor becomes
+  \[
+    Z_i \;=\; \frac{n_i}{n_i + \frac{\alpha}{w_i \,\beta}},
+  \]
+  where \(w_i\) is often the total weight (e.g.\ exposure) for risk \(i\). The rest of the approach mirrors B\"{u}hlmann’s method.
+\end{itemize}
+
+\subsection{Bayesian vs. Credibility Perspective}
+\begin{itemize}
+  \item B\"{u}hlmann’s model is a \emph{special case} of Bayesian updating under particular assumptions (\emph{linear loss function}, \emph{conjugate priors}, etc.).
+  \item Many exam questions ask you to \emph{compare} pure Bayesian posterior means vs.\ the \emph{credibility estimate}, showing that the latter is a \emph{linear} approximation.
+\end{itemize}
+
+\subsection{Exam Tips and Pitfalls}
+\begin{enumerate}
+  \item \textbf{Remember the core formula} for the credibility estimator:
+  \[
+    \hat{m}_i 
+    = Z_i \,\overline{X}_i 
+    + (1 - Z_i)\,\mu.
+  \]
+  \item \textbf{Parameter definitions}:
+    \begin{itemize}
+      \item \(\mu = \mathbb{E}[m(\Theta)]\).
+      \item \(\alpha = \mathbb{E}[\sigma^2(\Theta)]\) (the expectation of the conditional variance).
+      \item \(\beta = \mathrm{Var}(m(\Theta))\) (the variance of the conditional mean).
+    \end{itemize}
+  \item \textbf{Exam typical scenario}: You are given multiple policies’ claims data and overall sample means. The question instructs you to compute B\"{u}hlmann’s credibility premium for each policy (e.g.\ to price next year’s coverage).
+  \item \textbf{Common mistakes}:
+    \begin{itemize}
+      \item Confusing \(\alpha\) and \(\beta\).
+      \item Overlooking differences between B\"{u}hlmann’s model (same number of observations per policy) vs.\ B\"{u}hlmann--Straub (unequal exposures).
+      \item Mixing up the sample grand mean with \(\mu\), the theoretical overall mean.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Outline for Typical Exam Question}
+\begin{enumerate}
+  \item \emph{Data Provided}: 
+    \begin{itemize}
+      \item Claim observations for each of several risks.
+      \item Possibly an “overall sample mean” and “between- and within- variance” estimates.
+    \end{itemize}
+  \item \emph{Task}: 
+    \begin{itemize}
+      \item Calculate the necessary inputs: \(\alpha, \beta, \mu\).
+      \item Derive the credibility factor \(Z\) or \(Z_i\).
+      \item Compute the credibility estimate for each risk.
+    \end{itemize}
+  \item \emph{Extensions or Discussion}:
+    \begin{itemize}
+      \item Compare to a purely classical or purely Bayesian approach.
+      \item Evaluate differences if the number of years/exposures changes.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Summary}
+\begin{itemize}
+  \item \textbf{Credibility Theory} is a cornerstone of modern experience rating, blending individual loss data with collective risk information.
+  \item \textbf{Core formula mastery}: B\"{u}hlmann or B\"{u}hlmann--Straub. 
+  \item For exams, be comfortable performing the computations and explaining the conceptual meaning of \(\alpha, \beta,\) and \(\mu\).
+\end{itemize}
+\subsection{Later Chapters (4--9) Highlights}
+Topics typically include:
+\begin{itemize}
+  \item \textbf{Premium Calculation Principles} (e.g.\ expected value principle, variance principle).
+  \item \textbf{No-Claims Discount (NCD)} Systems.
+  \item \textbf{Run-off Triangles} (delayed claim settlement estimation).
+  \item \textbf{Ruin Theory} (probability that the insurer's surplus falls below 0 over time).
+  \item \textbf{Reinsurance} (impact of splitting risk with reinsurers, e.g.\ proportional/non-proportional treaties).
+\end{itemize}
+
+\section{Chapter 10: Extreme Value Theory (Exam-Focused)}
+\label{sec:chapter10}
+
+\subsection{Motivation and Context}
+\begin{itemize}
+  \item \textbf{Goal:} Model \emph{rare, extreme} claim events that can threaten insurer solvency.
+  \item \textbf{Exam Relevance:} Familiarity with GEV (Generalized Extreme Value) distributions, GPD (Generalized Pareto Distribution), and standard approaches to estimating tail risks (e.g., Value at Risk, large losses).
+\end{itemize}
+
+\subsection{Block Maxima and the GEV Distribution}
+\begin{itemize}
+  \item \textbf{Block Maxima Approach:} Partition data into blocks (e.g., yearly) and focus on the maximum in each block: 
+  \[
+    M_n = \max\{X_1,\ldots,X_n\}.
+  \]
+  \item \textbf{Fisher--Tippett Theorem (Essential Result)}: Under mild conditions,
+  \[
+    \frac{M_n - d_n}{c_n} \;\xrightarrow{d}\; H_{\xi}, 
+    \quad \text{where } H_{\xi} \text{ is a GEV distribution.}
+  \]
+  \item \textbf{GEV Family} \(H_{\xi}(x)\):
+    \[
+      H_{\xi}(x) 
+      = \exp\Bigl(-\bigl[1 + \xi x\bigl]^{-1/\xi}\Bigr),
+    \]
+    with sub-cases:
+    \begin{enumerate}
+      \item \(\xi > 0\): Fre\'chet,
+      \item \(\xi = 0\): Gumbel,
+      \item \(\xi < 0\): Weibull.
+    \end{enumerate}
+  \item \emph{Exam Tip:} You may be asked to \emph{recognize} or \emph{apply} the block maxima method for large claims or to classify which \(\xi\)-value is appropriate for a given empirical tail shape.
+\end{itemize}
+
+\subsection{Threshold Exceedances and the GPD}
+\begin{itemize}
+  \item \textbf{Peaks Over Threshold (POT)}: Instead of maxima in fixed blocks, focus on all observations above a chosen threshold \(u\). 
+  \item Define the \emph{excess} \(Y = X-u\) given \(X>u\). For large \(u\), the distribution of \(Y\) approaches a \textbf{Generalized Pareto Distribution (GPD)}:
+    \[
+      G_{\xi,\beta}(y) 
+      \;=\; 1 - \Bigl(1 + \frac{\xi\,y}{\beta}\Bigr)^{-\tfrac{1}{\xi}},
+      \quad y \ge 0,
+    \]
+    for shape \(\xi\) and scale \(\beta\).
+  \item \emph{Exam Tip:} Often tested via calculating “exceedance probabilities” or computing an extreme quantile (Value at Risk).
+\end{itemize}
+
+\subsection{Parameter Estimation and Diagnostics}
+\begin{itemize}
+  \item \textbf{GEV Fitting}: Use maximum likelihood or other methods on block maxima data.
+  \item \textbf{GPD Fitting}: For POT data, estimate \((\xi,\beta)\) using likelihood approaches. 
+  \item \textbf{Threshold Selection}: Choosing a suitable threshold \(u\) is both an art and science; too low introduces bias, too high leads to high variance. 
+  \item \emph{Exam Focus}: Basic knowledge of how to interpret fitted \(\xi\) and how it reflects tail heaviness.
+\end{itemize}
+
+\subsection{Tail Risk Measures}
+\begin{itemize}
+  \item \textbf{Value at Risk (VaR)}: For a confidence level \(p\), \(\text{VaR}_p\) is the \(p\)-quantile of the loss distribution.
+    \[
+      \Pr(X > \mathrm{VaR}_p) = 1-p.
+    \]
+  \item \textbf{Expected Shortfall (ES)}: Also called Conditional VaR or Tail VaR, the average loss beyond the VaR. 
+  \item \textbf{Exam Angle}: You might be asked to approximate VaR or ES under a GPD fit for high quantiles.
+\end{itemize}
+
+\subsection{Heavier vs.\ Lighter Tails}
+\begin{itemize}
+  \item \textbf{Interpreting \(\xi\)}:
+    \begin{itemize}
+      \item \(\xi>0\) \(\Rightarrow\) heavier tail (Fre\'chet type, e.g.\ Pareto).
+      \item \(\xi=0\) \(\Rightarrow\) Gumbel type (e.g.\ exponential-like).
+      \item \(\xi<0\) \(\Rightarrow\) bounded tail (Weibull type).
+    \end{itemize}
+  \item Typically, (re)insurance claims data often exhibit \(\xi>0\) or near 0 for the largest losses.
+\end{itemize}
+
+\subsection{Exam Tips and Sample Problems}
+\begin{enumerate}
+  \item \textbf{Block Maxima vs.\ POT Approaches:} 
+    - Identify which approach the question is using. Possibly compare them if asked.
+  \item \textbf{Fitting GPD:} 
+    - Might ask: “Given a threshold \(u\) and data points above \(u\), estimate \(\xi\) and \(\beta\). Then find \(\mathrm{VaR}_{0.99}\).”
+  \item \textbf{Tail Inference:} 
+    - “Show that if \(\xi>0\), the tail decays polynomially,” or “Distinguish exponential vs. polynomial tail behavior.”
+  \item \textbf{Link to Solvency/Ruin}: 
+    - Large claims modeling helps determine high quantiles of aggregate risk, so extreme losses can link to ruin theory.
+\end{enumerate}
+
+\subsection{Conclusion}
+\begin{itemize}
+  \item Extreme Value Theory is essential for capturing the risk of unusually large losses.
+  \item \textbf{GEV and GPD} are the two main pillars (block maxima vs.\ threshold exceedances).
+  \item Exam questions often center around parameter estimation, tail quantile calculation, and interpreting the shape parameter \(\xi\).
+\end{itemize}
+
+\section{Chapter 11: Copulas (Exam-Focused)}
+\label{sec:chapter11}
+
+\subsection{Motivation and Definition}
+\begin{itemize}
+  \item \textbf{Problem:} Real-world risks can be \emph{dependent}, not merely correlated in a linear sense. Traditional correlation may fail to capture \emph{tail dependence}.
+  \item \textbf{Copula Definition:} 
+    A bivariate copula \(C(u_1, u_2)\) is a joint distribution function on \([0,1]^2\) with uniform marginals on \([0,1]\).
+  \item \textbf{Exam Relevance:} Know how to construct a copula from a given joint distribution (and vice versa), plus key examples such as the Gaussian copula or Archimedean copulas.
+\end{itemize}
+
+\subsection{Sklar's Theorem (Central Result)}
+\begin{itemize}
+  \item \textbf{Statement:} For a joint distribution \(F(x_1,x_2)\) with marginals \(F_1,F_2\), there exists a copula \(C\) such that
+  \[
+    F(x_1,x_2) \;=\; C\bigl(F_1(x_1), F_2(x_2)\bigr).
+  \]
+  \item \textbf{Uniqueness (for continuous marginals)}: If \(F_1, F_2\) are continuous, then \(C\) is unique.
+  \item \emph{Exam Tip:} You may be asked to derive or apply \(C(u_1,u_2)=F(F_1^{-1}(u_1),F_2^{-1}(u_2))\).  
+\end{itemize}
+
+\subsection{Common Copula Families}
+\begin{itemize}
+  \item \textbf{Independence Copula:} \(C_0(u_1,u_2)=u_1 \,u_2.\)
+  \item \textbf{Comonotonicity Copula:} \(C_1(u_1,u_2)=\min(u_1,u_2)\) (perfect positive dependence).
+  \item \textbf{Countermonotonicity Copula:} \(C_{-1}(u_1,u_2)=\max\{u_1+u_2-1,0\}\) (perfect negative dependence).
+  \item \textbf{Gaussian Copula:} Derived from the joint distribution of a (standard) bivariate normal with correlation \(\rho\).
+  \item \textbf{Archimedean Copulas} (e.g.\ Clayton, Gumbel, Frank): 
+    \begin{itemize}
+      \item Have a \emph{generator} \(\phi\) s.t.\ 
+      \[
+        C(u_1,u_2)=\phi^{-1}\bigl(\phi(u_1)+\phi(u_2)\bigr).
+      \]
+      \item Notably used to capture different forms of tail dependence.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Constructing Joint Distributions via Copulas}
+\begin{itemize}
+  \item \textbf{Key Formula:} If \(X_1\sim F_1\) and \(X_2\sim F_2\) with copula \(C\), then the joint distribution of \((X_1,X_2)\) is
+  \[
+    F(x_1,x_2) = C\bigl(F_1(x_1),\, F_2(x_2)\bigr).
+  \]
+  \item \emph{Exam Tip:} Exercises may ask you to:
+    \begin{enumerate}
+      \item Show independence implies \(C(u_1,u_2)=u_1u_2\).
+      \item Derive the new joint PDF from the copula density \(c(u_1,u_2)\) and the marginal PDFs.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Tail Dependence}
+\begin{itemize}
+  \item \textbf{Upper Tail Dependence (UTD)}: Probability that one variable is extreme given the other is extreme. Formally for \(U_1,U_2\sim C\):
+    \[
+      \lambda_U = \lim_{q\to 1} \Pr\bigl(U_2>q \,\mid\, U_1>q\bigr).
+    \]
+  \item \textbf{Lower Tail Dependence (LTD)} similarly for lower tails.
+  \item \emph{Exam Questions}: Could ask how to interpret e.g.\ “Gauss copula has zero tail dependence for \(\rho<1\), while some Archimedean copulas exhibit non-zero tail dependence.”
+\end{itemize}
+
+\subsection{Simulation from Copulas}
+\begin{itemize}
+  \item \textbf{Idea:} If \(U_1,U_2\sim C\), then let 
+  \[
+    X_1=F_1^{-1}(U_1), \quad X_2=F_2^{-1}(U_2).
+  \]
+  \item \textbf{Exam Tip:} Possibly tested as a short question: “Explain how to simulate from a joint distribution using its copula and inverse transform of marginals.”
+\end{itemize}
+
+\subsection{Exam Tips and Common Pitfalls}
+\begin{itemize}
+  \item \textbf{Sklar's Theorem}: Know its statement and how to apply it in transformations.
+  \item \textbf{Copula Families}: Recognize the forms of independence, perfect positive/negative dependence, and possibly the main Archimedean copulas.
+  \item \textbf{Confusing correlation vs.\ tail dependence}: Remember that linear correlation = 0 does \emph{not} imply independence; copulas highlight this difference.
+  \item \textbf{Uniqueness for continuous marginals}: If the marginals are continuous, the copula is unique; otherwise, not necessarily.
+\end{itemize}
+
+\subsection{Summary}
+\begin{itemize}
+  \item Copulas allow us to separate \emph{marginal distributions} from \emph{dependence structure}.
+  \item They are crucial in finance/insurance for modeling joint risks beyond simple correlation.
+  \item Master the key results: Sklar's Theorem, main copula examples, tail dependence concept.
+\end{itemize}
+
+
+\section{Exam Analysis: Chapters 1 \& 2}
+\label{sec:chap1-2_exam_analysis}
+
+\subsection{Chapter 1: Preliminaries \& Background}
+
+\subsubsection{Typical Exam Question Styles}
+\begin{itemize}
+  \item \textbf{Basic Insurance ModelingH}: 
+    - Questions may ask: “Distinguish short-term vs.\ long-term insurance,” or “Explain why we assume immediate settlement and ignore expenses.”  
+    - Expect short conceptual answers on the simplifying assumptions of risk theory.
+  \item \textbf{Moment Generating Functions (MGFs) \& Cumulant Generating Functions (CGFs)}: 
+    - “Given the mgf of a distribution, find mean/variance.”  
+    - “Show that if two random variables share an mgf in some interval, they share the same distribution.”  
+    - Sometimes you must compute or simplify \(\mathbb{E}[X]\), \(\mathrm{Var}(X)\), etc., via MGFs.
+  \item \textbf{Compound SummariesH}: 
+    - Although a deeper look usually appears in later chapters, some early exam questions might test that you know how total claims \(S\) can be represented by \(N\) and \(\{X_i\}\).  
+    - You might see a short question: “Write the mgf of the compound distribution if \(N\sim\text{Poisson}\).”
+\end{itemize}
+
+\subsubsection{Key Pitfalls \& Must-Know Points}
+\begin{itemize}
+  \item \textbf{MGF \& CGF usageH}:
+    - Watch domain constraints: The mgf is valid only for certain \(t\).  
+    - If the question demands partial derivatives, do them carefully to find moments.
+  \item \textbf{Simplifying AssumptionsH}:
+    - Some questions test your understanding of “immediate claim settlement,” “no investment income,” etc. 
+    - Possibly short conceptual points about their practical limitations or effect on modeling.
+\end{itemize}
+
+\subsubsection{Example Exam Question}
+\begin{itemize}
+  \item \emph{“Explain why ignoring expenses is a simplifying assumption in short-term insurance models, and how that influences the total claim modeling process.”}
+  \item \textbf{Solution ApproachH}: 
+    - Outline that it keeps the focus purely on claim severity/frequency.  
+    - Realistically, expenses can be added, but the basic risk theory model omits them to reduce complexity.
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\subsection{Chapter 2: Loss (Claim) Distributions}
+
+\subsubsection{Typical Exam Question Styles}
+\begin{itemize}
+  \item \textbf{Identifying or Applying Common DistributionsH}:
+    - Exponential, Gamma, Lognormal, Pareto, Weibull, etc.  
+    - You might be asked: “Which distribution suits large claims best? Which is memoryless?” 
+  \item \textbf{Deriving Means, Variances, \& MGFsH}:
+    - E.g. “Show \(\mathbb{E}[X]=1/\lambda\) for Exponential(\(\lambda\)),” or “Prove \(\mathrm{Var}(X)=\frac{\alpha}{\lambda^2}\) for Gamma(\(\alpha,\lambda\)).”
+  \item \textbf{Tail Probability EmphasisH}:
+    - “Compute \(P(X>m)\) if \(X\) is Pareto(\(\alpha,\lambda\)) or Exponential(\(\lambda\)).”  
+    - Questions might compare tail heaviness among the distributions.
+  \item \textbf{Simulations or Transform MethodsH}:
+    - Inverse-transform or rejection sampling for a given distribution (e.g.\ “How do you simulate from an Exponential(1) if you only have Uniform(0,1) random draws?”).
+\end{itemize}
+
+\subsubsection{Key Pitfalls \& Must-Know Points}
+\begin{itemize}
+  \item \textbf{Parameterization DifferencesH}:
+    - Pareto or Gamma sometimes differ by shape/rate vs.\ shape/scale. Keep your course’s conventions straight.
+  \item \textbf{Heavy vs.\ Light TailsH}:
+    - Be ready to compare distributions on how fast their tails decay: Pareto is heavier than Lognormal, which is heavier than Exponential, etc.
+  \item \textbf{MGFsH}:
+    - Some distributions (Lognormal, Weibull) might lack simple closed-form mgfs. The exam might only ask you for known expansions or approximate reasoning, not a “closed form” that doesn’t exist.
+\end{itemize}
+
+\subsubsection{Example Exam Question}
+\begin{itemize}
+  \item \emph{“Given that \(X\sim\text{Exponential}(\lambda=0.2)\), find \(\mathbb{E}[X]\), \(\mathrm{Var}(X)\), and \(P(X>10)\). Then comment on whether this distribution is heavier-tailed than a Pareto(2,5).”}
+  \item \textbf{Solution ApproachH}: 
+    - \(\mathbb{E}[X]=5,\;\mathrm{Var}(X)=25,\;P(X>10)=\exp(-2).\)  
+    - Pareto(2,5) has a polynomial tail, so it’s heavier than the exponential’s exponential tail.
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\subsection{Combined Study Tips for Chapters 1 and 2}
+\begin{enumerate}
+  \item \textbf{MGF/CGF MasteryH}:
+    - Chapter 1 often tests MGFs for theoretical understanding; Chapter 2 applies them to specific distributions. Practice quickly deriving means and variances from MGFs for exponential, gamma, etc.
+  \item \textbf{Know the DistributionsH}:
+    - For Chapter 2: memorize PDF, MGF (if applicable), mean, variance, tail behavior. 
+  \item \textbf{Short Conceptual QuestionsH}:
+    - Chapter 1: “What are the main assumptions of the short-term risk model? Why discrete vs.\ continuous time?”  
+    - Chapter 2: “Which distribution is memoryless? Why do we use Pareto for large claims?”  
+  \item \textbf{Simulation/Inverse TransformH}:
+    - Some exam tasks might ask for basic steps to simulate from these distributions, bridging content from both chapters (foundation + distribution specifics).
+\end{enumerate}
+
+\section{Exam Analysis: Aggregate (Collective) Risk Models (Chapter 3)}
+\label{sec:agg_risk_exam_analysis}
+
+\subsection{Typical Exam Question Styles}
+\begin{enumerate}
+  \item \textbf{Compound Distribution Setup}\\
+    - You’ll often see questions stating the total claims \(S\) in a period is
+      \[
+        S = \sum_{i=1}^{N} X_i,
+      \]
+      where \(N\) is the number of claims (a random variable) and \(X_i\) are i.i.d.\ claim amounts, independent of \(N\).  
+    - Exam tasks:
+      \begin{itemize}
+        \item Write down the mgf (or cgf) of \(S\), e.g.\ \(M_S(t)=M_N(\ln M_X(t))\).
+        \item Derive mean and variance of \(S\) (using \(\mathrm{Var}(S)=\mathbb{E}[N]\mathrm{Var}(X)+\mathrm{Var}(N)(\mathbb{E}[X])^2\)).
+        \item Approximate or identify the distribution of \(S\) in special cases (Compound Poisson, Binomial, etc.).
+      \end{itemize}
+
+  \item \textbf{Identifying / Deriving Mean and VarianceH}\\
+    - A typical request: “Given \(N\sim \mathrm{Pois}(\lambda)\) and \(X_i \sim \mathrm{Exp}(\mu)\), find \(\mathbb{E}[S]\) and \(\mathrm{Var}(S)\).”  
+    - Alternatively, “If \(N \sim \mathrm{NegBin}(r,p)\) and \(X_i\) has mgf \(\ldots\), derive the mgf or compute certain moments.”
+
+  \item \textbf{Compound Poisson, Binomial, or Negative BinomialH}\\
+    - Common exam pattern: “Show that if \(N\sim\mathrm{Pois}(\lambda)\), then \(S\sim\text{Compound Poisson}\). Derive \(\mathbb{E}[S]\) and \(\mathrm{Var}(S)\).”  
+    - Could also see how to transform or interpret Binomial or NB for the claim count, leading to different mgfs for \(S\).
+
+  \item \textbf{Mixture or Overdispersion DiscussionsH}\\
+    - Some questions might note “Overdispersion in the data suggests using Negative Binomial instead of Poisson for \(N\).”  
+    - Possibly they ask you to compare Poisson vs. NB in terms of variance or data fitting.
+
+  \item \textbf{Reinsurance, Deductibles, or Policy LimitsH}\\
+    - If the question merges reinsurance, you might see “Compute the distribution or moments of \(S\) when each claim is capped at \(M\).”
+    - This can involve truncated or limited claim sizes in the sum.
+
+\end{enumerate}
+
+\subsection{Common Pitfalls and Must-Know Points}
+\begin{itemize}
+  \item \textbf{MGF FormulaH}:
+    \[
+      M_S(t) = \mathbb{E}[e^{tS}] = M_N\bigl(\ln(M_X(t))\bigr).
+    \]
+    - Many exam mistakes happen if you forget the log inside the mgf of \(N\).
+  \item \textbf{Mean-Variance RelationshipH}:
+    \[
+      \mathbb{E}[S]=\mathbb{E}[N]\mathbb{E}[X], 
+      \quad 
+      \mathrm{Var}(S)=\mathbb{E}[N]\mathrm{Var}(X)+\mathrm{Var}(N)(\mathbb{E}[X])^2.
+    \]
+    - This is a staple formula. Know it by heart. 
+  \item \textbf{Special Cases}:
+    - \(\mathrm{Compound\ Poisson}\): \(\mathrm{Var}(S)=\lambda[\mathrm{Var}(X)+(\mathbb{E}[X])^2]\).
+    - \(\mathrm{Compound\ Binomial}(n,p)\): \(M_S(t)=\bigl(p\,M_X(t)+(1-p)\bigr)^n\).
+    - \(\mathrm{Compound\ NB}(r,p)\): \(M_S(t)=\bigl(\frac{1-p}{1-p\,M_X(t)}\bigr)^r\).
+  \item \textbf{Using OverdispersionH}:
+    - If data show variance $>$ mean in claim counts, Poisson might not fit well. Negative Binomial can handle that.  
+    - The exam can have conceptual or short-answer questions discussing these differences.
+\end{itemize}
+
+\subsection{Key Formulas}
+\begin{itemize}
+  \item \textbf{Compound Distribution MGF:}
+    \[
+      M_S(t) = M_N\bigl(\ln M_X(t)\bigr).
+    \]
+  \item \textbf{Moment \& Variance:}
+    \[
+      \mathbb{E}[S] = \mathbb{E}[N]\cdot \mathbb{E}[X],\quad 
+      \mathrm{Var}(S)=\mathbb{E}[N]\mathrm{Var}(X)+\mathrm{Var}(N)\bigl(\mathbb{E}[X]\bigr)^2.
+    \]
+\end{itemize}
+
+\subsection{Study Tips for Aggregate Models}
+\begin{enumerate}
+  \item \textbf{Practice MGF \& Moment Derivations:}
+    - Typical question: “Given \(N\sim \mathrm{Pois}(\lambda)\) and \(X\sim \mathrm{Gamma}(\alpha,\theta)\), find \(M_S(t)\). Then compute \(\mathbb{E}[S]\) and \(\mathrm{Var}(S)\).”
+  \item \textbf{Compare Different Count DistributionsH}:
+    - Poisson vs. Binomial vs. NB.  
+    - Possibly link to real data: overdispersion or finite max claims (like Binomial).
+  \item \textbf{Check Any Additional TweaksH}:
+    - If reinsurance or deductibles are introduced, see how \(X_i\) changes (truncation/capping). Re-derive mgf or at least moments carefully.
+  \item \textbf{Exact vs. ApproximateH}:
+    - Some questions might say “Approximate by Normal if \(N\) or \(S\) are large,” or “Use the Central Limit Theorem.” Know the conditions and how to do so (mean, variance).
+\end{enumerate}
+
+\subsection{Example Exam-Style Problem}
+\begin{itemize}
+  \item \emph{“An insurer models the number of claims by a Negative Binomial(\(r,p\)) distribution and the claim size distribution \(X\) is exponential with parameter \(\beta\). Show that the mgf of the aggregate claims \(S\) is \(\bigl(\frac{1-p}{1-p\,(\frac{\beta}{\beta - t})}\bigr)^r\). Then derive \(\mathbb{E}[S]\) and \(\mathrm{Var}(S)\).”}
+  \item HSolution OutlineH:
+    \begin{enumerate}
+      \item State \(M_X(t)=\frac{\beta}{\beta - t}\) (for \(t<\beta\)).  
+      \item Then use compound distribution formula: 
+        \(\,M_S(t)=M_N[\ln(M_X(t))]\).  
+      \item With \(N\sim \mathrm{NB}(r,p)\), we have \(M_N(u)=\bigl(\frac{1-p}{1-p\,e^u}\bigr)^r\). Replace \(e^u\) by \(M_X(t)\).  
+      \item Compute \(\mathbb{E}[S]\) and \(\mathrm{Var}(S)\) using standard formulas or by partial derivatives at \(t=0\).
+    \end{enumerate}
+\end{itemize}
+
+\noindent
+Master these mgf manipulations, the standard mean-variance formula, and the nature of different count distributions, and you’ll be ready for aggregate risk model questions on the exam.
+
+\section{Exam Analysis: Premium Calculation Principles (Chapter 4)}
+\label{sec:premcalc_exam_analysis}
+
+\subsection{Typical Exam Question Styles}
+\begin{enumerate}
+  \item \textbf{Definition and Application of Each Principle}\\
+    - Exams often ask you to \emph{recognize}, \emph{define}, or \emph{apply} a specific premium principle:
+      \begin{itemize}
+        \item \emph{Expected Value Principle (EVP)}: \(\pi(X)=(1+\theta)\,\mathbb{E}[X]\).
+        \item \emph{Variance Principle}: \(\pi(X) = \mathbb{E}[X] + \alpha\,\mathrm{Var}(X)\).
+        \item \emph{Standard Deviation Principle}: \(\pi(X)=\mathbb{E}[X]+\beta\sqrt{\mathrm{Var}(X)}\).
+        \item \emph{Exponential (Esscher) Principle}: \(\pi(X)=\frac{1}{\delta}\ln\bigl(\mathbb{E}[e^{\delta\,X}]\bigr)\).
+        \item \emph{Distortion/Wang Transform}: Weighted survival function approach.
+      \end{itemize}
+    - They might give you a distribution (e.g.\ gamma, Pareto) and ask for \(\pi(X)\) under each principle.
+
+  \item \textbf{Comparisons of Principles}\\
+    - A classic question: “Discuss how the variance principle differs from the EVP in terms of risk loading.”  
+    - Or “Which principle is more sensitive to large claims? Exponential? Distortion method?”  
+    - Some questions ask for short-answer conceptual comparisons (pros/cons).
+
+  \item \textbf{Parameter Impact}\\
+    - “What happens to the premium if \(\alpha\) or \(\beta\) changes?” or “How does \(\delta\) in the exponential principle affect emphasis on the tail?”  
+    - Possibly a numeric scenario: “Given \(\mathrm{Var}(X)\), see how the premium scales for different \(\alpha\).”
+
+  \item \textbf{Connection to Utility Theory}\\
+    - You might see: “Explain why \(\pi(X)=\frac{1}{\delta}\ln(\mathbb{E}[e^{\delta\,X}])\) arises from an exponential utility approach.”  
+    - Or a question linking risk aversion to \(\delta\).
+
+  \item \textbf{Reinsurance or Aggregation}\\
+    - Some syllabi combine reinsurance or aggregated claims with premium setting. For instance, “Under the variance principle with \(\alpha=0.1\), find the net reinsurance premium for an Excess of Loss cover.”
+
+\end{enumerate}
+
+\subsection{Common Pitfalls and Must-Know Points}
+\begin{itemize}
+  \item \textbf{Correctly Interpreting Loadings}: 
+    - In the EVP, \(\theta\) is a proportionate loading. For the variance principle, \(\alpha\) scales \(\mathrm{Var}(X)\).  
+  \item \textbf{Exponential PrincipleH}: 
+    - Keep track of \(\delta>0\). If \(\delta\) is large, you heavily penalize large claims. Don’t confuse \(\delta\) with \(\theta\) or \(\alpha\).
+  \item \textbf{MGF and Esscher principleH}:
+    - For the exponential principle, you often need \(\mathbb{E}[e^{\delta\,X}]\). If \(\mathbb{E}[e^{\delta\,X}]\) is infinite (or outside the mgf domain), you can’t apply that principle directly.
+  \item \textbf{Comparing SensitivitiesH}:
+    - Variance or standard deviation principles incorporate dispersion. 
+    - EVP does not account for variability—only the mean. 
+    - Distortion methods can overweight tail probabilities, etc.
+  \item \textbf{Utility TheoryH}:
+    - The exam can ask conceptual links: “Which principle corresponds to an insurer with constant absolute risk aversion?” (Answer: exponential principle.)
+\end{itemize}
+
+\subsection{Key Formulas to Keep Handy}
+\begin{itemize}
+  \item \textbf{Expected Value PrincipleH}: \(\pi(X) = (1+\theta)\,\mathbb{E}[X]\).
+  \item \textbf{Variance PrincipleH}: \(\pi(X) = \mathbb{E}[X] + \alpha\,\mathrm{Var}(X)\).
+  \item \textbf{Exponential PrincipleH}:
+    \[
+      \pi(X) = \frac{1}{\delta}\,\ln\Bigl(\mathbb{E}[e^{\delta X}]\Bigr).
+    \]
+  \item \textbf{Wang’s TransformH}: 
+    \(\,\pi(X)=\int_0^\infty[1-g(S_X(x))]\,dx,\) 
+    where \(g\) is a distortion function, \(S_X\) is the survival function.  
+\end{itemize}
+
+\subsection{Study Tips for Premium Principles}
+\begin{enumerate}
+  \item \textbf{Practice with Various DistributionsH}: 
+    - E.g.\ if \(X\sim \mathrm{Pareto}(\alpha,\lambda)\), can you compute \(\pi(X)\) quickly under the variance principle? Or the exponential principle? 
+  \item \textbf{Interpret LoadingsH}:
+    - Exams often ask “Which principle is fairer to large policyholders?” or “Which is more risk-sensitive?” Provide reasoned arguments (variance or exponential typically more risk-averse).
+  \item \textbf{Recall MGF UsageH}:
+    - For the exponential principle, you need \(M_X(\delta)=\mathbb{E}[e^{\delta X}]\). Make sure you can handle common mgfs (e.g.\ gamma, lognormal might not have a closed form, etc.).
+  \item \textbf{Know the Edge CasesH}:
+    - \(\alpha=0\) in variance principle reduces to EVP.  
+    - \(\delta=0\) in exponential principle notionally recovers EVP in a limiting sense.  
+    - Distortion method can replicate simpler principles with certain distortion functions.
+\end{enumerate}
+
+\subsection{Example Exam-Style Problem}
+\begin{itemize}
+  \item \emph{“A portfolio’s claim size \(X\) has mean \(\mu=100\) and variance \(\sigma^2=2000\). Under the variance principle with \(\alpha=0.02\), find the premium. Compare it to the premium under the exponential principle with \(\delta=0.001\), assuming you know the mgf or can approximate \(\mathbb{E}[e^{0.001X}]\). Then discuss which principle results in a higher premium and why.”}
+  \item HSolution OutlineH:
+    \begin{enumerate}
+      \item \(\pi_{\text{variance}}(X) = 100 + 0.02\times 2000=100+40=140.\)
+      \item \(\pi_{\text{exp}}(X)=\frac{1}{0.001}\ln[\mathbb{E}(e^{0.001X})].\) Possibly approximate or given a numeric mgf. 
+      \item Conclude which principle yields a bigger loading, referencing the heavier weighting of large claims in the exponential principle.
+    \end{enumerate}
+\end{itemize}
+
+\noindent
+Master these formula manipulations, be ready for short conceptual answers, and you’ll be well-prepared for premium principle questions on the exam.
+
+\section{Exam Analysis: No-Claims Discount Systems (Chapter 5)}
+\label{sec:ncd_exam_analysis}
+
+\subsection{Typical Exam Question Styles}
+\begin{enumerate}
+  \item \textbf{Transition Matrices (Markov Chain Models)}\\
+    - You may see a system of discount levels (e.g.\ 0\%, 20\%, 50\%) with specified transition rules:  
+      \begin{itemize}
+        \item “If no claim in a year, move up one level unless already at highest.”  
+        \item “If a claim, move down one level unless already at lowest.”  
+      \end{itemize}
+    - The exam might ask you to:
+      \begin{itemize}
+        \item Construct the transition probability matrix \(P\).  
+        \item Given an initial distribution of policyholders across discount levels, compute the new distribution next year: \(\boldsymbol{\pi}_{n+1} = \boldsymbol{\pi}_{n} \, P\).  
+        \item Or find the \emph{stationary distribution} \(\boldsymbol{\pi}\) satisfying \(\boldsymbol{\pi}\,P=\boldsymbol{\pi}\).
+      \end{itemize}
+
+  \item \textbf{Claim Probability Adjustments (Deductibles or Probability Splits)}\\
+    - If there is a deductible or threshold (e.g.\ only claims above 2 are reported), the effective probability of a claim might be lower than the raw accident probability.  
+    - The exam can ask you to show that “the probability a policyholder claims is \(\alpha\) times the tail probability of some distribution” and then incorporate that into the NCD transitions.
+
+  \item \textbf{Premium / Expected Rates in Long-Term Equilibrium} \\
+    - Another frequent task: “Find the stationary distribution of policyholders across the discount levels, then calculate the expected premium paid (as a fraction of the full premium) in equilibrium.”  
+    - Possibly they’ll require a single numeric final answer or an algebraic expression in terms of \(\boldsymbol{\pi}\).
+
+  \item \textbf{Short/Medium-Term Analysis} \\
+    - Some questions: “Given an initial distribution in year \(k\), what proportion will be at 50\% discount after 3 years?” Or “Compute how many are at 0\% discount next year if the probability of a claim is 0.025.”
+
+  \item \textbf{Comparisons or Adjustments in the NCD System} \\
+    - You might see a scenario: “Add an extra discount level or incorporate multiple claims in one year leading to bigger class jumps.”  
+    - The exam question might test your ability to re-construct or update the transition matrix accordingly.
+\end{enumerate}
+
+\subsection{Common Pitfalls and Must-Know Points}
+\begin{itemize}
+  \item \textbf{Markov Chain Basics}:
+    - Ensure you correctly interpret transitions (rows vs.\ columns).  
+    - Double-check that each row sums to 1 if you treat row-stochastic matrices, or each column sums to 1 if column-stochastic is used (the convention can vary).
+  \item \textbf{Probability of a Claim vs. Accident Probability}:
+    - If there’s a deductible (e.g.\ losses below 2 are not claimed), the actual \emph{claim} probability might be \(\Pr(\text{loss} > 2)\times\Pr(\text{accident})\).  
+    - Many exam mistakes come from mixing up unconditional accident probability with conditional claim probability.
+  \item \textbf{Stationary Distribution CalculationH}:
+    - Solving \(\boldsymbol{\pi}\,P=\boldsymbol{\pi}\) plus \(\sum_i \pi_i=1\).  
+    - Sometimes the matrix has an obvious approach (like 2 or 3 discount classes).  
+    - Make sure you do not transpose incorrectly or forget normalizing constraints.
+  \item \textbf{Discount \(\neq\) Premium DirectlyH}:
+    - If a level has a “50\% discount” from the full premium \(\mathrm{FP}\), the policyholder pays \((1 - 0.50)\times \mathrm{FP} = 0.50\mathrm{FP}\).  
+    - Many small errors occur from mixing discount percentages with final premium amounts.
+\end{itemize}
+
+\subsection{Key Formulas or Steps to Memorize}
+\begin{itemize}
+  \item \textbf{Transition Probability Matrix ConstructionH}:  
+    Example with three discount levels \(\{0\%,25\%,50\%\}\) and claim probability \(q\):
+    \[
+      P = 
+      \begin{pmatrix}
+        p_{00} & p_{01} & p_{02}\\
+        p_{10} & p_{11} & p_{12}\\
+        p_{20} & p_{21} & p_{22}
+      \end{pmatrix}.
+    \]
+    Usually, you fill the diagonal/up/down transitions based on “claim vs. no-claim.”
+  \item \textbf{Stationary VectorH}:
+    \[
+      \boldsymbol{\pi} = (\pi_0, \pi_1,\ldots,\pi_k),
+      \quad
+      \boldsymbol{\pi}\,P=\boldsymbol{\pi},
+      \quad
+      \sum_i \pi_i=1.
+    \]
+  \item \textbf{Expected Premium in EquilibriumH}:  
+    \[
+      \mathrm{E}[\text{Premium}] 
+      = \sum_i \Bigl(\pi_i \times (\text{premium factor for level } i)\Bigr).
+    \]
+\end{itemize}
+
+\subsection{Study Tips for NCD Exams}
+\begin{enumerate}
+  \item \textbf{Practice Constructing MatricesH}: 
+    - For a multi-level system, quickly outline each transition (claim or no claim).  
+    - Double-check row sums and probabilities of claims vs. no claims.
+  \item \textbf{Solve Stationary Distribution Step-by-StepH}: 
+    - If you have 2 or 3 classes, you can do it by direct system of equations or by logic (like: \(\pi\) must be eigenvector of \(P\) with eigenvalue 1).
+  \item \textbf{Incorporate a Deductible ProbabilityH}: 
+    - If the question states “probability of accident is 0.10, but only claims if the loss > 2,” then you might do \(\,q=0.10 \times P(X>2)\).  
+    - Re-check the distribution for the claim size to confirm that tail probability.
+  \item \textbf{InterpretationH}:
+    - Some exam questions ask “Why have an NCD system at all? How does it reward good drivers?” or “What fraction of drivers in the long run enjoy the top discount?” to highlight the financial impact.
+\end{enumerate}
+
+\subsection{Example Exam-Style Question}
+\begin{itemize}
+  \item \emph{“An insurer has three discount levels 0\%, 25\%, 50\%. Each policyholder has probability 0.08 of submitting a claim in a year. The transition rules are: claim-free \(\Rightarrow\) move up or stay at top; claim \(\Rightarrow\) move down or stay at 0\%. Construct the transition matrix, compute next year’s distribution from \((0.6,0.3,0.1)\), find the stationary distribution, and the expected premium in equilibrium if the full premium is \$1000.”}
+  \item \textbf{Solution OutlineH}:
+    \begin{enumerate}
+      \item \(\,q=0.08\) (claim), \(\,1-q=0.92\) (no claim).  
+      \item Build transition matrix \(P\) with correct up/down transitions.  
+      \item Multiply \((0.6,0.3,0.1)\times P\) for next year’s distribution.  
+      \item Solve \(\boldsymbol{\pi}\,P=\boldsymbol{\pi}\) plus \(\sum \pi_i=1\).  
+      \item Weighted average premium: 
+        \(\pi_0\times 1000 + \pi_{25}\times (1-0.25)\times 1000 + \pi_{50}\times (1-0.50)\times 1000.\)
+    \end{enumerate}
+\end{itemize}
+
+\noindent
+Mastering these transitions, the matrix approach, and stationary distributions will equip you for the majority of NCD-based exam questions.
+
+\section{Exam Analysis: Claims Reserving (Chapter 6)}
+\label{sec:reserving_exam_analysis}
+
+\subsection{Typical Exam Question Styles}
+\begin{enumerate}
+  \item \textbf{Chain-Ladder Method (CL)}\\
+    - Often you’ll see a development triangle of cumulative paid or incurred claims by accident year vs.\ development year.
+    - The exam might ask you to:
+      \begin{itemize}
+        \item Calculate age-to-age (development) factors.
+        \item Project the most recent diagonal to fill in the triangle.
+        \item Estimate ultimate claims and, hence, the total reserve needed at a certain point in time.
+      \end{itemize}
+
+  \item \textbf{Bornhuetter–Ferguson (BF) Method}\\
+    - “Combine a priori loss estimates with observed development so far.”
+    - You might need to show how BF is less reactive to early fluctuations compared to CL.
+    - Possibly compute expected ultimate for each accident year, then the resulting reserve.
+
+  \item \textbf{Cape Cod / Other Methods}\\
+    - Some syllabi mention the Cape Cod method (a refined approach blending CL and BF). 
+    - Could be asked to compare results or conceptually explain differences.
+
+  \item \textbf{Outstanding Amounts in Different Development Years}\\
+    - The exam might require you to “strip out” or “split” the additional amounts that will be paid in future development periods (i.e.\ how much is paid in year \(n+1\) vs.\ year \(n+2\) etc.).
+    - Watch for instructions about inflation adjustments or discounting.
+
+  \item \textbf{Numerical Triangles with Missing Entries}\\
+    - Sometimes, partial data is given, and you must infer some missing cumulative or incremental values. 
+    - Possibly must solve a system of equations or use ratio methods.
+
+\end{enumerate}
+
+\subsection{Common Pitfalls and Must-Know Points}
+\begin{itemize}
+  \item \textbf{Cumulative vs.\ Incremental DataH}:
+    - If the table is in HcumulativeH form, you must ensure you do not double-count when deriving incremental payments.  
+    - Chain-ladder typically uses cumulative data, but check if the question provides incremental data or not.
+  \item \textbf{Development Factors vs.\ AveragesH}:
+    - Age-to-age factors can be volume-weighted or simple averages. 
+    - Make sure you read whether the exam problem states “use simple average factors,” or “use volume-weighted (link ratio) factors.”
+  \item \textbf{Inflation AdjustmentsH}:
+    - If future inflation is to be applied, you might need to scale up future payments (or data might already be in real terms).
+  \item \textbf{Bornhuetter-Ferguson DetailsH}:
+    - BF takes the \emph{expected unreported portion} and multiplies it by a prior expected ultimate.  
+    - Different from chain-ladder, which uses observed data entirely for projecting future developments.
+  \item \textbf{Tail FactorsH}:
+    - If the data only goes up to a certain development year, some exam questions require an additional “tail factor” to capture ultimate payments beyond the last observed age.
+\end{itemize}
+
+\subsection{Key Formulas and Approaches}
+\begin{itemize}
+  \item \textbf{Chain-Ladder FactorsH}:
+    \[
+      f_j \;=\; \frac{\sum_{\text{AY}} C_{\text{AY},\,j+1}}{\sum_{\text{AY}} C_{\text{AY},\,j}}
+      \quad (\text{cumulative approach}),
+    \]
+    and then we project forward:
+    \[
+      C_{\text{AY},\,k} \;=\; C_{\text{AY},\,j} \times \prod_{m=j}^{k-1} f_m.
+    \]
+  \item \textbf{BF MethodH}: For an accident year \(i\),
+    \[
+      \text{Ultimate}_i 
+      \;=\; \text{Reported}_i + \Bigl[\text{(A Priori Ultimate)}_i - \text{Reported}_i\Bigr]\times \bigl(1 - \text{Percent Reported so far}\bigr).
+    \]
+    - The “Percent Reported” can come from a chain-ladder dev factor approach or other assumptions.
+\end{itemize}
+
+\subsection{Study Tips for Reserving}
+\begin{enumerate}
+  \item \textbf{Practice Filling TrianglesH}: 
+    - A typical question gives a partial triangle of cumulative payments. Step by step, compute factors, fill the table, and sum the reserve. 
+    - Double-check that “reserve” means \emph{unpaid} claims: e.g.\ total ultimate minus paid so far.
+  \item \textbf{Know the Strengths/LimitsH}: 
+    - Exams sometimes ask you to “compare chain-ladder with Bornhuetter-Ferguson.” Summarize each’s reliance on past data vs.\ prior expectations.
+  \item \textbf{Incremental vs. CumulativeH}:
+    - If the question data is incremental, you might convert it to cumulative or apply a slightly different approach.  
+    - Watch out for time indexing (accident vs. development year).
+  \item \textbf{Residual or DiagnosticH} (less common but might appear): 
+    - Possibly a question about checking the reasonableness of factors or a mention of “run-off triangles can be extended to IBNR, IBNER, etc.”
+\end{enumerate}
+
+\subsection{Example Exam-Style Question}
+\begin{itemize}
+  \item \emph{“Below is a run-off triangle of cumulative claims over 3 accident years and up to 2 development years. Use chain-ladder to estimate the ultimate claims for each year and the total reserve required at the end of year 2. Also assume future inflation of 2\% for the next year. Show your calculations and final reserve in current-year terms.”}
+  \item \textbf{OutlineH}:
+    \begin{enumerate}
+      \item Calculate dev factors \(f_1, f_2\).  
+      \item Project out the incomplete cells.  
+      \item Subtract paid so far to get outstanding amounts.  
+      \item Adjust for 2\% inflation if needed. Sum up for total reserve.
+    \end{enumerate}
+\end{itemize}
+
+\noindent
+By thoroughly practicing run-off triangle completions, factor calculations, and understanding the difference between methods, you’ll be prepared for most claims reserving exam questions.
+
+\section{Exam Analysis: Ruin Theory (Chapter 7)}
+\label{sec:ruin_exam_analysis}
+
+\subsection{Typical Exam Question Styles}
+\begin{enumerate}
+  \item \textbf{Classical Compound Poisson Model}\\
+    - Insurer’s surplus: \(U(t) = u + ct - S(t)\), where \(S(t)\) is a compound Poisson process (\(N(t)\sim \mathrm{Pois}(\lambda t)\) with i.i.d.\ claim sizes \(\{X_i\}\)).
+    - Exam questions might ask you to:
+      \begin{itemize}
+        \item State or derive the probability of ruin \(\psi(u)\).
+        \item Use the \emph{adjustment coefficient} \(R\) in the exponential bound \(\psi(u) \le e^{-Ru}\).
+        \item Show how to solve for \(R\) if, e.g., \(MX(R)\) (the mgf of claim sizes) is given.
+      \end{itemize}
+
+  \item \textbf{Lundberg Inequality / Cramér--Lundberg Bound}\\
+    - You might see a short “prove or show how the Lundberg bound is obtained,” or “Given \(\lambda, c,\) and \(M_X(t)\), find the adjustment coefficient.”  
+    - Could also be asked to interpret the bound or evaluate numerical examples.
+
+  \item \textbf{Loading Condition}\\
+    - A question may note: If \(c \le \lambda\,\mathbb{E}[X]\), ruin is certain (\(\psi(u)=1\)). 
+    - Or “explain why a positive loading \(\theta\) leads to a finite probability of ruin.”
+
+  \item \textbf{Discrete-Time Approximation}\\
+    - Some exams mention ruin in a discrete-time model: \(U_{n+1} = U_n + c - X_{n+1}\).  
+    - Possibly Markov chain arguments or partial results for \(\psi(u)\).
+
+  \item \textbf{Gerber--Shiu Function}\\
+    - More advanced questions sometimes refer to the Gerber--Shiu expected discounted penalty function, but this can be specialized.  
+    - If in your syllabus, they may ask you to define or compute it for a simplified scenario.
+
+  \item \textbf{Reinsurance or Premium Calculation Tied to Ruin Theory}\\
+    - The exam might link reinsurance or Esscher premium calculations to ruin probability, e.g., how reinsurance changes the adjustment coefficient.
+
+\end{enumerate}
+
+\subsection{Common Pitfalls and Must-Know Points}
+\begin{itemize}
+  \item \textbf{Adjustment Coefficient EquationH}: 
+    \[
+      \lambda \bigl(M_X(R)-1\bigr) = cR,
+    \]
+    where \(M_X(t)=\mathbb{E}[e^{tX}]\). Solve for \(R>0\).
+    - Make sure you handle mgf domain constraints (\(t < \) the mgf’s radius of convergence).
+    - Check signs carefully: if no positive solution exists, \(\psi(u)=1\).
+  \item \textbf{Surplus Process DetailsH}: 
+    - For the classical model, premium is collected continuously at rate \(c\).  
+    - If they mention premium is collected per time step or lumpsum, watch for differences.
+  \item \textbf{Inequalities vs.\ Exact SolutionsH}:
+    - Often the exam only requires the \emph{Lundberg bound}, not the exact ruin probability.  
+    - Exact expressions for \(\psi(u)\) are sometimes only tractable with specific claim distributions (e.g., exponential).
+  \item \textbf{Positive Loading ConditionH}: 
+    - \(\rho = \frac{\lambda\,\mathbb{E}[X]}{c}\). If \(\rho<1\), we have a positive safety loading.  
+    - If \(\rho \ge 1\), ruin is certain in the infinite-horizon model.
+\end{itemize}
+
+\subsection{Key Formulas and Derivations}
+\begin{itemize}
+  \item \textbf{Definition of Ruin Probability:}
+    \[
+      \psi(u) \;=\; \Pr\bigl(\tau<\infty \mid U(0)=u\bigr),
+      \quad \tau=\inf\{t\ge 0: U(t)<0\}.
+    \]
+  \item \textbf{Cramér--Lundberg Inequality:}
+    \[
+      \psi(u)\;\le\;e^{-Ru},
+      \quad R \text{ solves } \lambda \bigl(M_X(R)-1\bigr) = cR.
+    \]
+  \item \textbf{Exponential Claim SizesH}:
+    - If \(X \sim \mathrm{Exp}(\alpha)\), we can find a closed-form solution for \(R\).  
+    - Possibly exam asks for you to do that step explicitly.
+\end{itemize}
+
+\subsection{Study Tips for Ruin Theory}
+\begin{enumerate}
+  \item \textbf{Memorize Core Bounds and ConditionsH}:  
+    - \(\psi(u)\le e^{-Ru}\) and the loading condition.  
+    - Understand how \(\lambda(M_X(R)-1)=cR\) arises from the Lundberg equation.
+  \item \textbf{Practice ExamplesH}:  
+    - E.g.\ for exponential claims, solve for \(R\) to show a numeric bound.  
+    - Check if an exam question might want the partial derivative approach or a direct mgf substitution.
+  \item \textbf{Possible Reinsurance or VariationH}:  
+    - If the question references XoL reinsurance, you might recalculate the mgf of truncated claims to get a new adjustment coefficient.  
+    - Or possibly a changed premium rate \(c\).
+  \item \textbf{InterpretationH}:  
+    - “What does the adjustment coefficient represent?” or “Explain how a larger \(R\) implies a smaller ruin bound.”  
+    - Communicating the link between safety loading, claim distribution, and ruin probability.
+\end{enumerate}
+
+\subsection{Example Exam-Style Question}
+\begin{itemize}
+  \item \emph{“Assume claims occur as a Poisson process with rate \(\lambda\). Claim sizes \(X_i\) follow an exponential distribution with mean \(\frac{1}{\alpha}\). The insurer collects premium continuously at rate \(c\). Show the ruin probability \(\psi(u)\) is bounded by \(\exp(-Ru)\), where \(R\) is the solution to the Lundberg equation \(\ldots\). Then compute \(R\) explicitly and evaluate the bound for \(u=50\). Explain the effect of increasing \(c\).”}
+  \item HSolution OutlineH:
+    \begin{enumerate}
+      \item Identify \(M_X(t)=\frac{\alpha}{\alpha - t}\) for \(t<\alpha\).  
+      \item Solve \(\lambda\bigl(\frac{\alpha}{\alpha - R}-1\bigr)=cR\).  
+      \item Evaluate numeric solution, compare for different \(c\).  
+      \item Conclude how ruin bound decreases as \(c\) (loading) increases.
+    \end{enumerate}
+\end{itemize}
+
+\noindent
+By internalizing these bounding techniques, mgf-based derivations, and the key loading condition, you’ll be prepared for a variety of ruin theory questions.
+
+\section{Exam Analysis: Reinsurance (Chapter 8)}
+\label{sec:reinsurance_exam_analysis}
+
+\subsection{Typical Exam Question Styles}
+\begin{enumerate}
+  \item \textbf{Proportional (Pro Rata) vs.\ Non-Proportional (Excess of Loss, Stop-Loss)}\\
+    - Questions commonly distinguish Quota Share (a fixed fraction \(\alpha\)) and Surplus Reinsurance (a fraction above a retention line) from Excess of Loss (XoL) or Stop-Loss.  
+    - You might be asked to derive the insurer’s expected claim payment (and variance) vs.\ the reinsurer’s payment under these different arrangements.
+
+  \item \textbf{Aggregate vs.\ Individual Claim Reinsurance}\\
+    - For XoL (per claim), you split each claim at retention \(M\).  
+    - For Stop-Loss (aggregate), you split total claims \(S\) above some threshold.  
+    - Exam tasks could involve deriving \(\mathbb{E}[\min(X,M)]\) or \(\mathbb{E}[S \wedge M]\) for the insurer’s share, etc.
+
+  \item \textbf{Ruin Probability / Surplus Analysis}\\
+    - Some exams ask: “How does reinsurance (with given structure) reduce the variance of retained claims, thus lowering ruin probability?”  
+    - Possibly compute or compare the adjustment coefficient in a ruin theory context, with and without reinsurance.
+
+  \item \textbf{Reinsurance Pricing}\\
+    - “Under the expected value principle with loading \(\theta\), find the reinsurance premium for an XoL contract from \(M\) to \(M+L\).”  
+    - Or demonstrate how reinsurance might reduce an insurer’s net premium but increase certain other costs or complexities.
+
+  \item \textbf{Optimal Retention Problems}\\
+    - The exam might pose: “Show how to find the retention \(M\) that maximizes the insurer’s expected profit or minimizes risk measures.”  
+    - Often requires partial derivatives or analyzing \(\mathrm{Var}\) of retained claims as a function of \(M\).
+\end{enumerate}
+
+\subsection{Common Pitfalls and Must-Know Points}
+\begin{itemize}
+  \item \textbf{Retained vs.\ Ceded Layers:}
+    - Carefully define:
+      \[
+        \text{Retained claim} = X \wedge M, 
+        \quad
+        \text{Ceded claim} = (X - M)^+ = \max(0, X - M).
+      \]
+    - Students sometimes mix up which portion the insurer pays vs.\ reinsurer pays, especially if there’s a limit on the XoL layer or multiple layers.
+  \item \textbf{Correctly Handling Probability and Moments:}
+    - “Calculate \(\mathbb{E}[X \wedge M]\)” or \(\mathbb{E}[(X-M)^+]\). This often involves splitting the integral or sum at \(M\).  
+    - E.g.\ for continuous distributions:
+      \[
+        \mathbb{E}[X \wedge M] 
+        = \int_0^M P(X> x)\,dx 
+        \quad \text{(integration by parts approach).}
+      \]
+  \item \textbf{Aggregate vs. Individual:}
+    - For a \emph{per-claim} XoL contract, each claim is truncated at \(M\). Summation requires the distribution or mgf of truncated claims.  
+    - For a \emph{Stop-Loss} contract at level \(R\), the reinsurer covers \(\max(S-R,0)\). This can drastically reduce the tail risk of the insurer’s distribution.
+  \item \textbf{Premium Calculation Principles:}
+    - Might be asked to use the expected value principle (or variance, Esscher) for the reinsurance premium. Keep track of who is paying for loadings and how the cost is shared.
+\end{itemize}
+
+\subsection{Key Formulas and Expressions}
+\begin{itemize}
+  \item \textbf{Quota Share Reinsurance:}
+    \[
+      \text{Insurer’s claim} = \alpha X,\quad
+      \text{Reinsurer’s claim} = (1-\alpha)X.
+    \]
+    \(\mathbb{E}[\alpha X]=\alpha\,\mathbb{E}[X]\).  
+  \item \textbf{Surplus ReinsuranceH}: 
+    - Similar fraction \(\alpha\) but only above a certain retention line; the fraction can change if the claim is smaller than the line.
+  \item \textbf{Excess of Loss (per claim)H}:
+    \[
+      \text{Insurer’s claim} = X \wedge M \quad (\text{plus amounts above any XoL layer limit}),
+    \]
+    \[
+      \text{Reinsurer’s claim} = (X - M)^+ \quad (\text{within the layer limit}).
+    \]
+  \item \textbf{Stop-Loss (aggregate)}:
+    \[
+      \text{Reinsurer covers} = \max(S-R,0), 
+      \quad
+      \text{Insurer covers} = \min(S,R).
+    \]
+  \item \textbf{Variance ReductionH}:
+    - For the insurer, reinsurance typically reduces variance of retained claims. 
+    - Example: “Show how \(\mathrm{Var}(X\wedge M)\le \mathrm{Var}(X)\).”
+\end{itemize}
+
+\subsection{Exam Preparation Tips}
+\begin{enumerate}
+  \item \textbf{Practice Detailed CalculationsH}: 
+    - E.g.\ compute \(\mathbb{E}[(X-M)^+]\) for a known distribution (like exponential or Pareto).  
+    - Summation approach: \(\int_M^\infty (x-M) f_X(x)\,dx\).
+  \item \textbf{Know the Premium CalculationH}: 
+    - If using the expected value principle with a loading factor \(\theta\), the reinsurance premium is
+      \[
+        (1+\theta)\,\mathbb{E}[\text{(reinsurer’s share)}].
+      \]
+    - Distinguish who pays for it, how the insurer’s net cost changes, etc.
+  \item \textbf{Relate to Ruin TheoryH}:
+    - You may see short questions about how reinsurance modifies surplus processes and lowers ruin probability. Possibly referencing the compound Poisson approach.
+  \item \textbf{Check for Multiple Layers or CapsH}:
+    - Some questions involve multi-layer XoL or reinsurance that ends at a certain point, leaving the insurer with an “overspill.” Carefully parse these details.
+\end{enumerate}
+
+\subsection{Example Exam-Style Problem}
+\begin{itemize}
+  \item \emph{“You have a portfolio with claim size distribution \(X\sim \text{Pareto}(\alpha,\lambda)\). The insurer buys an Excess of Loss contract at retention \(M\). Show that the expected portion paid by the reinsurer is \(\ldots\). Then compute the reinsurance premium under the expected value principle with loading factor 0.2. Compare the variance of the insurer’s retained claims with and without reinsurance.”}
+  \item HSolution OutlineH:
+    \begin{enumerate}
+      \item Identify \(\mathbb{E}[(X - M)^+]\) for Pareto by using \(\int_M^\infty (x-M)f_X(x)\,dx\).  
+      \item Multiply by 1.2 for the reinsurance premium.  
+      \item For \(\mathrm{Var}(X\wedge M)\), break it down or use known integrals if provided.  
+      \item Conclude how reinsurance reduces tail risk.
+    \end{enumerate}
+\end{itemize}
+
+\noindent
+With consistent practice handling these calculations, you’ll be well prepared for any reinsurance-focused exam question.
+
+\section{Exam Analysis: Credibility Theory (Chapter 9)}
+\label{sec:credibility_exam_analysis}
+
+\subsection{Typical Exam Question Styles}
+\begin{enumerate}
+  \item \textbf{B\"{u}hlmann Credibility Model}\\
+    - A standard question might provide data for multiple risks over a certain number of years, ask you to calculate:
+      \begin{itemize}
+        \item The overall sample mean \(\mu\).
+        \item The within-risk variance \(\alpha=\mathbb{E}[\mathrm{Var}(X|\Theta)]\).
+        \item The between-risk variance \(\beta=\mathrm{Var}(\mathbb{E}[X|\Theta])\).
+        \item The credibility factor \(Z=\frac{n}{n + \alpha/\beta}\).
+        \item The resulting premium \(\hat{m}_i = Z\,\overline{X}_i + (1-Z)\,\mu\).
+      \end{itemize}
+    - HPitfallH: Confusing which quantities come from sample means vs. theoretical means.
+
+  \item \textbf{B\"{u}hlmann--Straub Model}\\
+    - Similar to B\"{u}hlmann but with varying exposures \(\{w_i\}\).  
+    - Credibility factor may become \(Z_i = \frac{w_i}{w_i + \alpha/\beta}\).  
+    - Watch out for the case where each risk has different \(\{n_i\}\) or “volume” (exposure).
+
+  \item \textbf{Bayesian vs. Credibility}\\
+    - “Show B\"{u}hlmann is a linear Bayes estimator under an assumed prior.”  
+    - Or compare a fully Bayesian posterior mean with the B\"{u}hlmann formula.  
+
+  \item \textbf{Numerical Illustrations / Experience Rating}\\
+    - You might be given a few years of claims data per policy, asked to compute next year’s premium for each.  
+    - Or compare classical vs. credibility-based rates.  
+
+  \item \textbf{Extensions:} Some syllabi include:
+    - Hierarchical credibility.  
+    - Regression-based credibility.  
+    - Weighted or partial credibility for short experience periods.
+\end{enumerate}
+
+\subsection{Common Pitfalls and Must-Know Points}
+\begin{itemize}
+  \item \textbf{Parameter Definitions}:
+    \begin{itemize}
+      \item \(\mu = \mathbb{E}[\mathbb{E}(X|\Theta)]\).
+      \item \(\alpha = \mathbb{E}[\mathrm{Var}(X|\Theta)]\) = “within-risk variance” (average of conditional variances).
+      \item \(\beta = \mathrm{Var}(\mathbb{E}[X|\Theta])\) = “between-risk variance.”
+    \end{itemize}
+    HMix-upsH between \(\alpha\) and \(\beta\) are very common in exam scripts.
+  \item \textbf{How to Estimate \(\alpha,\beta,\mu\)} from sample data:
+    - Usually, you compute an overall mean (grand average) for \(\mu\).  
+    - Then break total variance into “within” and “between” parts if you have multiple groups/policies with enough data.
+  \item \textbf{Interpretation of Credibility Factor \(Z\)}:
+    - High \(Z\) means the policy’s own data is weighted more.  
+    - Low \(Z\) means the policy’s data is not very credible, so we rely more on the “collective average.”
+  \item \textbf{Discrete or Continuous Distributions?}:
+    - Make sure you handle the data or given distribution (e.g.\ Poisson/Gamma mixture) consistently if it’s a theoretical derivation.  
+    - Sometimes the exam references a known Bayesian prior–posterior relationship for Poisson/Gamma or Normal/Normal.
+\end{itemize}
+
+\subsection{Key Formulas \& Derivations}
+\noindent\textbf{B\"{u}hlmann (Basic) Formula:}\\
+Given \(n\) homogeneous years (or data points) for a risk \(i\):
+\[
+  Z = \frac{n}{n + \frac{\alpha}{\beta}}, 
+  \quad
+  \hat{m}_i = Z\, \overline{X}_i + (1-Z)\,\mu.
+\]
+\noindent
+HB\"{u}hlmann--StraubH version (exposure \(w_i\)):
+\[
+  Z_i = \frac{w_i}{\,w_i + \frac{\alpha}{\beta}\,}, 
+  \quad
+  \hat{m}_i = Z_i\, \overline{X}_i + (1-Z_i)\,\mu.
+\]
+
+\subsection{Exam Preparation Tips}
+\begin{enumerate}
+  \item \textbf{Practice Summation Tables}: Where you have multiple policies (risks) and multiple years. Distinguish carefully the sums of squares (for within-group variance) from the variance of group means (between-group).
+  \item \textbf{Remember the 3 Big Formulas}:
+    \begin{enumerate}
+      \item \(\alpha = \mathbb{E}[\mathrm{Var}(X|\Theta)]\).
+      \item \(\beta = \mathrm{Var}(\mathbb{E}[X|\Theta])\).
+      \item \(\mu = \mathbb{E}[\mathbb{E}[X|\Theta]]\).
+    \end{enumerate}
+  \item \textbf{Linear Bayes vs. B\"{u}hlmannH}:  
+    - You might be asked for a short explanation that B\"{u}hlmann is the unique linear estimator minimizing mean squared error under certain assumptions.  
+  \item \textbf{InterpretationH}:
+    - Exams can ask “Why do we weight the individual mean and collective mean?” or “What if \(\beta=0\) or \(\alpha=0\)?”.
+\end{enumerate}
+
+\subsection{Example Exam-Style Question}
+\begin{itemize}
+  \item \emph{“You have data on 5 policies, each observed for 3 years. The total claims and sum of squares are given for each policy, along with the overall average claim. Calculate \(\alpha,\beta,\mu\) and then the credibility premium for each policy in year 4.”}
+  \item Steps:
+    \begin{enumerate}
+      \item Compute each policy’s sample mean \(\overline{X}_i\).
+      \item Estimate overall mean \(\mu\).
+      \item Decompose total variance into \(\alpha\) (within) and \(\beta\) (between).
+      \item Apply B\"{u}hlmann formula to get \(\hat{m}_i\).
+    \end{enumerate}
+  \item HPitfallsH: incorrectly summing squares or forgetting degrees-of-freedom adjustments.  
+\end{itemize}
+
+\noindent
+By internalizing these steps and repeatedly practicing data-based as well as conceptual questions, you’ll be well-positioned to tackle all Credibility/Experience Rating exam items with confidence.
+
+\section{Exam Analysis: Extreme Value Theory (Chapter 10)}
+\label{sec:evt_exam_analysis}
+
+\subsection{Typical Exam Question Styles}
+\begin{enumerate}
+  \item \textbf{Block Maxima (GEV) Approach}\\
+    - Often you’ll see a question: “Consider yearly maxima \(\{M_1,\ldots,M_n\}\). Show they converge (under linear normalization) to a GEV distribution. Apply or discuss the Fisher–Tippett theorem.”  
+    - Numerical tasks might involve using maximum likelihood estimates to fit a GEV to block maxima data, then computing high quantiles or tail probabilities.
+
+  \item \textbf{Threshold Exceedances (GPD) Approach}\\
+    - “Given a threshold \(u\), model exceedances \(X-u \mid X>u\) by a GPD. Estimate shape/scale parameters.”  
+    - Might need to calculate a Value at Risk (VaR) or Expected Shortfall at a high confidence level using GPD-based formulas.
+
+  \item \textbf{Heavy-Tail Comparisons}\\
+    - Compare or classify distributions (e.g.\ exponential vs.\ Pareto) in terms of tail heaviness.  
+    - Sometimes a question: “Which distribution is in the Fréchet domain of attraction? Show or prove it.”
+
+  \item \textbf{Domain of Attraction Proofs}\\
+    - A typical style: “Prove that distribution \(\ldots\) is in the maximum domain of attraction of the Gumbel / Fréchet / Weibull distribution,” referencing the standard limit theorems.  
+    - Often uses a known normalization sequence \((c_n, d_n)\) and a limit calculation.
+
+  \item \textbf{Extreme Risk Measures}\\
+    - “Estimate a high quantile (99.5\% VaR) using a GPD fit.”  
+    - “Explain how the shape parameter \(\xi\) influences tail thickness and solvency considerations.”
+
+\end{enumerate}
+
+\subsection{Common Pitfalls \& Must-Know Items}
+\begin{itemize}
+  \item \textbf{Correct Normalization for MDA Proofs:}
+    - When proving a distribution belongs to a GEV family, be sure to identify \(c_n\) (scale) and \(d_n\) (location) correctly. Mistakes in signs or constant factors are common.
+  \item \textbf{Remember the GEV Subfamilies:}
+    - \(\xi>0\) = Fréchet, \(\xi=0\) = Gumbel, \(\xi<0\) = Weibull. Exams may ask to interpret or classify data into these sub-cases.
+  \item \textbf{Tail Approximation vs. Entire Distribution:}
+    - GPD or GEV are asymptotic tools. Some questions test whether you grasp that they apply for \emph{large} \(n\) or \emph{high} thresholds.
+  \item \textbf{Threshold Choice:}
+    - If threshold \(u\) is too low, the GPD assumption might be invalid; too high, the variance of estimates is large. Exam questions might note this trade-off but rarely require more than a conceptual explanation.
+  \item \textbf{Misreading Distribution Parameters:}
+    - For instance, if an exam says “Pareto(\(\alpha,\lambda\)),” verify you know whether that means the tail function \(\bigl(\frac{\lambda}{\lambda+x}\bigr)^\alpha\). Different textbooks shift the parameterization.
+  \item \textbf{Value at Risk (VaR) Computations:}
+    - If using the GPD approach for high quantiles, recall the formula for the conditional exceedance distribution 
+      \[
+        1 - \Bigl(1+\frac{\xi(x-u)}{\beta}\Bigr)^{-1/\xi}.
+      \]
+      Pay attention to domain constraints (must have \(1 + \frac{\xi(x-u)}{\beta}>0\)).
+\end{itemize}
+
+\subsection{Key Formulas and Results to Have Ready}
+\begin{itemize}
+  \item \textbf{GEV Distribution}:
+    \[
+      H_\xi(x) = \exp\Bigl(-\bigl(1+\xi x\bigr)^{-1/\xi}\Bigr),
+      \quad \xi \neq 0,
+    \]
+    and the Gumbel limit (\(\xi=0\)): \(H_0(x)=\exp\bigl(-e^{-x}\bigr)\).
+  \item \textbf{Fisher--Tippett Theorem}:
+    \[
+      \frac{M_n - d_n}{c_n} \;\xrightarrow{d}\; H_\xi(x), 
+      \quad \text{for suitable sequences }(c_n>0,d_n).
+    \]
+  \item \textbf{GPD (Peaks-Over-Threshold)}:
+    \[
+      G_{\xi,\beta}(x)= 1-\Bigl(1+\frac{\xi x}{\beta}\Bigr)^{-1/\xi}, 
+      \quad x\ge 0,
+    \]
+    with \(\xi\) the shape parameter, \(\beta\) the scale, for large \(u\). 
+  \item \textbf{Generalized Pareto Mean Excess Formula}:
+    - For large thresholds, \(\mathbb{E}[X-u \mid X>u] \approx \frac{\beta}{1-\xi}\) if \(\xi<1\).
+  \item \textbf{Value at Risk with GPD}:
+    - For a probability \(p\) near 1 and threshold exceedance model,
+      \[
+        \text{VaR}_p \approx u + \frac{\beta}{\xi}\Bigl[\bigl(\tfrac{1-p}{1-F(u)}\bigr)^{-\xi}-1\Bigr].
+      \]
+\end{itemize}
+
+\subsection{Exam-Style Tips and Strategies}
+\begin{itemize}
+  \item \textbf{Know the Domains of Attraction:}  
+    - Exponential \(\to\) Gumbel, Pareto with \(\alpha\) \(\to\) Fréchet, etc.
+  \item \textbf{Check the Asymptotic Nature}: 
+    - If asked about small or moderate claims, remind yourself that EVT mostly targets the tail or maxima. 
+  \item \textbf{Numerical Practice}: 
+    - Some exams ask you to fill in a table of block maxima, estimate \(\xi\) or \(\beta\), then compute a high quantile.  
+    - You might do a short MLE or method-of-moments approach if required (though many times it’s more conceptual).
+\end{itemize}
+
+\subsection{Recommended Review Steps}
+\begin{enumerate}
+  \item \textbf{Domain of Attraction Proofs}: Practice one or two standard proofs—e.g.\ exponential \(\to\) Gumbel, Pareto \(\to\) Fréchet, or light vs. heavy tails.
+  \item \textbf{GEV \& GPD Parameter Interpretation}: 
+    - Identify the shape parameter \(\xi\) and how it reflects tail heaviness.  
+  \item \textbf{Computing Tail Quantiles}: 
+    - GPD-based formula for VaR or high-level quantiles. 
+  \item \textbf{Compare Models}: 
+    - Questions might contrast the block maxima method (GEV) with the POT method (GPD). Understand strengths/weaknesses of each approach.
+\end{enumerate}
+
+\noindent
+By focusing on these key points—understanding the theorems, being comfortable with the shape parameter \(\xi\), and practicing a few typical exam proofs or numerical VaR calculations—you’ll be well-prepared for any EVT-related questions on the exam.
+
+\section{Exam Analysis: Copulas (Chapter 11)}
+\label{sec:copulas_exam_analysis}
+
+\subsection{Typical Exam Question Styles}
+\begin{enumerate}
+  \item \textbf{Constructing or Identifying a Copula via Sklar’s Theorem}\\
+    Given a joint distribution \(F(x_1,x_2)\) with continuous marginals \(F_1, F_2\), find the copula 
+    \[
+      C(u_1,u_2) \;=\; F\bigl(F_1^{-1}(u_1), F_2^{-1}(u_2)\bigr).
+    \]
+    \emph{Common twist:} The question may involve transformations such as \(\min(U_1,U_2)\), \((X,1/X)\), etc.
+
+  \item \textbf{Transformations \& Joint Distributions}\\
+    - Exam tasks like “Find the distribution of \(\min(U_1,U_2)\)” where \(U_1\) and \(U_2\) have some specified relationship.  
+    - May ask for the joint CDF/PDF of \(\bigl(U_1, \min(U_1,U_2)\bigr)\) or \((X, X^2)\).  
+    - Then interpret (or partially derive) the corresponding copula.
+
+  \item \textbf{Tail Dependence}\\
+    - Compute upper/lower tail dependence coefficients (\(\lambda_U, \lambda_L\)) for a given copula or determine whether they are zero vs. positive.  
+    - Compare families like Gaussian vs. Archimedean (Clayton, Gumbel, etc.) in terms of tail behavior.
+
+  \item \textbf{Simulation}\\
+    - Show how to simulate from a given copula (e.g.\ Gaussian copula) and then transform to marginals.  
+    - Possibly short-answer questions on the inverse-transform approach with copulas.
+
+  \item \textbf{Copula Families and Properties}\\
+    - Recognize independence, comonotonic, or countermonotonic copulas.  
+    - Possibly asked to show that a given formula is or is not a valid copula by checking copula properties (increasing in each argument, boundary conditions, etc.).
+\end{enumerate}
+
+\subsection{Common Pitfalls \& Must-Know Items}
+\begin{itemize}
+  \item \textbf{Confusing Correlation with Dependence:}
+    Zero correlation \(\neq\) independence. Copulas highlight non-linear dependencies.
+  \item \textbf{Incorrectly Handling Domain Constraints:}
+    Especially with transformations like \(\min(U_1,U_2)\), \((X,1/X)\), or squared variables.  
+  \item \textbf{Mix-Ups in Inversions:}
+    When applying Sklar’s Theorem, you must invert the marginals carefully (e.g.\ handle \(\log\) for lognormal, \(\sqrt{\cdot}\) for squares, etc.).
+  \item \textbf{Tail Dependence Mistakes:}
+    If you must compute 
+    \[
+      \lambda_U=\lim_{u\to 1^-}\Pr(U_2>u \mid U_1>u),
+    \]
+    ensure you use the correct formula. Watch out for subtle domain effects.
+  \item \textbf{Partial Derivatives for the Copula PDF:}
+    If asked for \(c(u_1,u_2)=\frac{\partial^2}{\partial u_1\partial u_2}C(u_1,u_2)\), do the chain rule carefully. This is less common but can appear.
+\end{itemize}
+
+\subsection{Key Formulas and Results to Memorize or Derive Quickly}
+\begin{itemize}
+  \item \textbf{Sklar's Theorem} in Bivariate Form: 
+    \[
+      F(x_1,x_2)=C\bigl(F_1(x_1),F_2(x_2)\bigr), 
+      \quad C(u_1,u_2)=F\bigl(F_1^{-1}(u_1),F_2^{-1}(u_2)\bigr).
+    \]
+  \item \textbf{Tail Dependence Coefficients}: 
+    \[
+      \lambda_U = \lim_{u\to 1^-} \frac{1-2u + C(u,u)}{1-u}, 
+      \quad
+      \lambda_L = \lim_{u\to 0^+} \frac{C(u,u)}{u}.
+    \]
+  \item \textbf{Independence vs. Comonotonic vs. Countermonotonic} Copulas:
+    \[
+      C_{\text{indep}}(u_1,u_2)=u_1u_2, \quad
+      C_{1}(u_1,u_2)=\min(u_1,u_2), \quad
+      C_{-1}(u_1,u_2)=\max\{u_1+u_2-1,0\}.
+    \]
+  \item \textbf{Simulation Steps}:
+    \begin{enumerate}
+      \item Generate \((U_1,U_2)\sim C\).
+      \item Transform to marginals: \((X_1,X_2)=(F_1^{-1}(U_1), F_2^{-1}(U_2))\).
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Recommended Study Tips}
+\begin{itemize}
+  \item \textbf{Work Through Past Papers}: Practice short derivations of copulas from joint distributions \((X,Y)\) and re-check boundary conditions.
+  \item \textbf{Check Theoretical vs. Numerical Qs}: Some exams favor short conceptual “prove or disprove” tasks; others want numeric or partial derivative computations.
+  \item \textbf{Sketch Domain Partitions}: For transformations like \(\min(U_1,U_2)\), draw or reason about \(\{U_1\le u_1,\min(U_1,U_2)\le u_2\}\) if needed.
+\end{itemize}
+
+\noindent
+\textbf{In summary,} copula-based exam questions commonly test your ability to:
+\begin{enumerate}
+  \item Correctly apply Sklar’s Theorem (joint \(\leftrightarrow\) copula).
+  \item Manage transformations of \((U_1,U_2)\) or \((X,g(X))\).
+  \item Address tail dependence or general dependence properties.
+  \item Possibly handle partial derivatives or simulation logic.
+\end{enumerate}
+Master these techniques, and you’ll be ready for most copula-related exam items.
+
+\end{document}
