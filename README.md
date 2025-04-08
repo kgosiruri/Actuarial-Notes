@@ -1,4 +1,4 @@
-# 📚 Heriot-Watt Actuarial Science Notes (Excl. CB1 & CB2)
+# 📚 Actuarial Science Notes (Excl. CB1 & CB2)
 
 Welcome to my comprehensive revision repository for all **Actuarial Science modules** at **Heriot-Watt University**, excluding CB1 (Business Finance) and CB2 (Economics). This repo is designed to help consolidate concepts, provide quick reference during exams, and support peers in the journey toward actuarial exams and beyond.
 
